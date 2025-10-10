@@ -6,7 +6,7 @@ import analytics from "../utils/analytics";
 import testimonial1 from "../assets/images/testimonial/testimonial-one.png";
 import testimonial2 from "../assets/images/testimonial/testimonial-two.png";
 
-const TestimonialSection = () => {
+const TestimonialSection = ({ id }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const ref = useRef(null);
     const inView = useInView(ref, { once: true, margin: "-100px" });
@@ -62,6 +62,7 @@ const TestimonialSection = () => {
 
     return (
         <motion.section
+            id={id}
             ref={ref}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}

@@ -64,13 +64,13 @@ const Navbar = () => {
                 </Link>
             </div>
             {/* Desktop Nav */}
-            <ul className="hidden md:flex gap-8 text-lg font-medium text-white/90">
+            <ul className="hidden md:flex gap-8 text-lg font-medium text-white">
                 {navLinks.map((link) => (
                     <li key={link.label}>
                         {link.isHash ? (
                             <a
                                 href={link.href}
-                                className="relative hover:text-futuristic-cyan-300 transition-colors duration-200 group"
+                                className="relative text-white hover:text-white transition-colors duration-200 group"
                                 onClick={e => {
                                     e.preventDefault();
                                     handleNavClick(link);
@@ -82,7 +82,7 @@ const Navbar = () => {
                         ) : (
                             <Link
                                 to={link.href}
-                                className="relative hover:text-futuristic-cyan-300 transition-colors duration-200 group"
+                                className="relative text-white hover:text-white transition-colors duration-200 group"
                                 onClick={() => handleNavClick(link)}
                             >
                                 {link.label}
@@ -134,10 +134,10 @@ const Navbar = () => {
                         <li key={link.label}>
                             <a
                                 href={link.href}
-                                className="relative hover:text-futuristic-cyan-300 transition-colors duration-200 group inline-block"
+                                className="relative text-white hover:text-white transition-colors duration-200 group inline-block"
                                 onClick={e => {
                                     e.preventDefault();
-                                    handleNavClick(link.href);
+                                    handleNavClick(link);
                                 }}
                             >
                                 {link.label}

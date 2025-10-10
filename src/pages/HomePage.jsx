@@ -9,13 +9,10 @@ import StatsSection from '../components/StatsSection';
 import ServicesSection from '../components/ServicesSection';
 import PortfolioGallerySection from '../components/PortfolioGallerySection';
 import ProcessSection from '../components/ProcessSection';
-import BlogSection from '../components/BlogSection';
 import TestimonialSection from '../components/TestimonialSection';
 import TopClientsSection from '../components/TopClientsSection';
 import ContactFooterSection from '../components/ContactFooterSection';
 import ScrollToTop from '../components/ScrollToTop';
-import ThreeBackground from '../components/ThreeBackground';
-import CursorMask from '../components/CursorMask';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -72,8 +69,11 @@ const HomePage = () => {
 
     return (
         <div className="relative min-h-screen overflow-hidden">
-            {/* Three.js Background */}
-            <ThreeBackground />
+            {/* Lightweight CSS Background */}
+            <div className="fixed inset-0 z-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-900"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-futuristic-cyan-500/10 via-transparent to-transparent"></div>
+            </div>
 
             {/* Main Content */}
             <div className="relative z-10">
@@ -85,7 +85,6 @@ const HomePage = () => {
                     <ServicesSection id="services" />
                     <PortfolioGallerySection id="portfolio" />
                     <ProcessSection id="process" />
-                    <BlogSection id="blog" />
                     <LetsBuildSuccessSection />
                     <TestimonialSection id="testimonials" />
                     <ContactFooterSection id="contact" />
@@ -93,16 +92,7 @@ const HomePage = () => {
                 <ScrollToTop />
             </div>
 
-            {/* Floating particles overlay */}
-            <div className="fixed inset-0 pointer-events-none z-20">
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-pulse-slow opacity-60"></div>
-                <div className="absolute top-1/3 right-1/4 w-1 h-1 bg-purple-300 rounded-full animate-float opacity-80"></div>
-                <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-pink-400 rounded-full animate-bounce-slow opacity-70"></div>
-                <div className="absolute top-2/3 right-1/3 w-1 h-1 bg-purple-200 rounded-full animate-pulse-slow opacity-50"></div>
-            </div>
-
-            {/* Premium Cursor Mask - temporarily disabled */}
-            {/* <CursorMask /> */}
+            {/* Removed heavy floating particle overlay for performance */}
         </div>
     );
 };
