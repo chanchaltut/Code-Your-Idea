@@ -1,106 +1,85 @@
-import React, { useRef } from "react";
-import { motion, useInView } from "framer-motion";
-import analytics from "../utils/analytics";
-import aboutImg from "../assets/images/about/about.webp";
-import { FaUsers, FaRocket, FaHandshake, FaChartLine } from "react-icons/fa";
+import React from 'react';
+import Spline from '@splinetool/react-spline';
 
 const AboutSection = () => {
-    const ref = useRef(null);
-    const inView = useInView(ref, { once: true, margin: "-100px" });
-
-    const leftVariants = {
-        hidden: { opacity: 0, x: -60 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
-    };
-
-    const rightVariants = {
-        hidden: { opacity: 0, x: 60 },
-        visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } },
-    };
-
     return (
-        <motion.section
-            ref={ref}
-            initial="hidden"
-            animate={inView ? "visible" : "hidden"}
-            id="about"
-            className="w-full bg-transparent py-16 md:py-24 pt-24 md:pt-32"
-        >
-            <div className="max-w-7xl mx-auto px-4 md:px-12">
-                <div className="flex flex-col md:flex-row items-center justify-between gap-12 md:gap-16">
-                    {/* Left - Image */}
-                    <motion.div className="flex-1" variants={leftVariants}>
-                        <div className="relative">
-                            <img
-                                src={aboutImg}
-                                alt="About Us"
-                                className="w-full h-auto rounded-2xl shadow-glow-blue"
-                            />
-                            <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-futuristic-blue-500/30 rounded-full blur-2xl"></div>
-                            <div className="absolute -top-6 -left-6 w-32 h-32 bg-futuristic-cyan-500/30 rounded-full blur-3xl"></div>
-                        </div>
-                    </motion.div>
+        <section className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center py-20">
 
-                    {/* Right - Content */}
-                    <motion.div className="flex-1 text-left" variants={rightVariants}>
-                        <h4 className="text-futuristic-cyan-300 text-lg font-semibold tracking-widest mb-4 uppercase">About Us</h4>
-                        <h2 className="text-3xl md:text-5xl font-extrabold text-white leading-tight mb-6">
-                            Your Trusted Development Partner
-                        </h2>
-                        <p className="text-white/70 text-lg mb-6 leading-relaxed text-left">
-                            We're a small, focused team that builds real, functional products for real people. Founded in 2024, based in India, we specialize in turning your ideas into digital reality through clean websites and powerful mobile apps.
-                        </p>
-                        <p className="text-white/70 text-lg mb-8 leading-relaxed text-left">
-                            Our mission is simple: help startups and small businesses launch faster with technology that works. No fluff, no unnecessary complexity – just solid development that gets results.
-                        </p>
+            {/* 1. Background "Ghost" Text 
+          Placed absolutely to sit behind the 3D element but in front of the background.
+      */}
+            <div className="absolute top-4 md:top-4 inset-x-0 z-0 flex flex-col items-center justify-center select-none pointer-events-none">
+                <h2 className="text-xl md:text-3xl lg:text-5xl font-bold text-[#1a1a1a] text-center tracking-tighter leading-none">
+                    WE HELP
+                    <br />
+                    BUSINESSES SUCCEED.
+                </h2>
+            </div>
 
-                        {/* Values Section */}
-                        <div className="space-y-4">
-                            <h3 className="text-xl font-bold text-white mb-4">Our Values</h3>
-                            <div className="space-y-3">
-                                <div className="flex items-start gap-3 text-left">
-                                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br from-futuristic-blue-500 to-futuristic-cyan-500 shadow-glow-blue">
-                                        <FaUsers className="text-white text-2xl" />
-                                    </div>
-                                    <div className="text-left">
-                                        <h4 className="font-semibold text-white text-left">Expert Team</h4>
-                                        <p className="text-white/70 text-left">Fast development, quick launches, no endless delays</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 text-left">
-                                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br from-futuristic-purple-500 to-futuristic-blue-500 shadow-glow-purple">
-                                        <FaRocket className="text-white text-2xl" />
-                                    </div>
-                                    <div className="text-left">
-                                        <h4 className="font-semibold text-white text-left">Fast Delivery</h4>
-                                        <p className="text-white/70 text-left">Clear updates, honest timelines, always available</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 text-left">
-                                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br from-futuristic-cyan-500 to-futuristic-purple-500 shadow-glow-cyan">
-                                        <FaHandshake className="text-white text-2xl" />
-                                    </div>
-                                    <div className="text-left">
-                                        <h4 className="font-semibold text-white text-left">Client Focus</h4>
-                                        <p className="text-white/70 text-left">Simple solutions, clean code, no confusion</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 text-left">
-                                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br from-futuristic-blue-500 to-futuristic-cyan-500 shadow-glow-blue">
-                                        <FaChartLine className="text-white text-2xl" />
-                                    </div>
-                                    <div className="text-left">
-                                        <h4 className="font-semibold text-white text-left">Growth Focus</h4>
-                                        <p className="text-white/70 text-left">Simple solutions, clean code, no confusion</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
+            {/* 2. Main Grid Layout */}
+            <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center mt-10 md:mt-0">
+
+                {/* Left Column Stats */}
+                <div className="flex flex-col gap-20 md:gap-40 items-center md:items-end text-center md:text-right px-6 order-2 md:order-1">
+                    <StatBlock
+                        number="25+"
+                        label="INDUSTRY TECH STACK"
+                    />
+                    <StatBlock
+                        number="10+"
+                        label="HAPPY CUSTOMERS"
+                    />
+                </div>
+
+                {/* Center Column: The Spline Robot 
+            This takes up the middle space. The 'scene' prop handles the interaction.
+        */}
+                <div className="h-[400px] md:h-[600px] w-full flex items-center justify-center order-1 md:order-2 relative overflow-visible">
+                    <div className="absolute inset-0 scale-[1.05] origin-center w-[120%] left-1/2 -translate-x-1/2">
+                        <Spline
+                            className="w-full h-full bg-transparent"
+                            scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
+                        />
+                    </div>
+                    {/* Overlay to hide any remaining watermark in bottom-right corner */}
+                    <div className="absolute bottom-0 -right-8 w-48 h-12 bg-black z-20 pointer-events-none" />
+                </div>
+
+                {/* Right Column Stats */}
+                <div className="flex flex-col gap-20 md:gap-40 items-center md:items-start text-center md:text-left px-6 order-3 md:order-3">
+                    <StatBlock
+                        number="2024"
+                        label="THIS COMPANY IS FOUNDED"
+                        subLabel="ESTABLISHED"
+                    />
+                    <StatBlock
+                        number="100%"
+                        label="CUSTOMER SATISFACTION"
+                    />
                 </div>
             </div>
-        </motion.section>
+
+            {/* 3. Bottom Description Text */}
+            <div className="relative z-10 max-w-4xl mx-auto px-6 mt-16 text-center">
+                <p className="text-gray-400 text-sm md:text-base leading-relaxed font-light">
+                    Founded in 2024 in Balangir, Odisha, India. CodeYourIdea was born from a simple vision, help businesses shine online. We bridge the digital gap by delivering sleek websites and apps with speed, precision, and top-tier quality. — we make it happen.
+                </p>
+            </div>
+
+        </section>
     );
 };
 
-export default AboutSection; 
+// Helper Component for the Stat Blocks to ensure consistent typography
+const StatBlock = ({ number, label }) => (
+    <div className="group cursor-default">
+        <h3 className="text-5xl md:text-7xl font-bold text-[#1a1a1a] group-hover:text-white transition-colors duration-500 mb-2">
+            {number}
+        </h3>
+        <p className="text-[#333] group-hover:text-gray-400 font-bold tracking-widest text-sm md:text-lg uppercase transition-colors duration-500">
+            {label}
+        </p>
+    </div>
+);
+
+export default AboutSection;

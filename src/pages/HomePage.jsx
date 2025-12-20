@@ -2,13 +2,10 @@ import { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
-import LetsBuildSuccessSection from '../components/LetsBuildSuccessSection';
 import HeroSection from '../components/HeroSection';
 import AboutSection from '../components/AboutSection';
-import StatsSection from '../components/StatsSection';
-import ServicesSection from '../components/ServicesSection';
-import PortfolioGallerySection from '../components/PortfolioGallerySection';
-import ProcessSection from '../components/ProcessSection';
+import PortfolioSection from '../components/PortfolioSection';
+import PricingSection from '../components/Pricing';
 import TestimonialSection from '../components/TestimonialSection';
 import TopClientsSection from '../components/TopClientsSection';
 import ContactFooterSection from '../components/ContactFooterSection';
@@ -81,11 +78,8 @@ const HomePage = () => {
                 <main className="relative">
                     <HeroSection />
                     <AboutSection id="about" />
-                    <StatsSection id="stats" />
-                    <ServicesSection id="services" />
-                    <PortfolioGallerySection id="portfolio" />
-                    <ProcessSection id="process" />
-                    <LetsBuildSuccessSection />
+                    <PortfolioSection id="portfolio" />
+                    <PricingSection id="pricing" />
                     <TestimonialSection id="testimonials" />
                     <ContactFooterSection id="contact" />
                 </main>
