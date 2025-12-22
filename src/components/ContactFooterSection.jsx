@@ -147,8 +147,8 @@ const ContactFooterSection = ({ id }) => {
                                 </div>
                                 <div className="text-left">
                                     <h4 className="font-semibold text-white text-lg mb-1">Call Us</h4>
-                                    <a href="tel:+919938965598" className="text-futuristic-cyan-300 hover:text-futuristic-cyan-200 text-lg transition-colors duration-200" onClick={() => analytics.trackContactClick('phone')}>
-                                        +91 9938965598
+                                    <a href="tel:+916370510539" className="text-futuristic-cyan-300 hover:text-futuristic-cyan-200 text-lg transition-colors duration-200" onClick={() => analytics.trackContactClick('phone')}>
+                                        +91 6370510539
                                     </a>
                                     <p className="text-white/60 text-sm">Monday - Friday: 9:00 AM - 7:00 PM IST</p>
                                 </div>
@@ -160,8 +160,8 @@ const ContactFooterSection = ({ id }) => {
                                 </div>
                                 <div className="text-left">
                                     <h4 className="font-semibold text-white text-lg mb-1">WhatsApp</h4>
-                                    <a href="https://wa.me/919938965598" target="_blank" rel="noopener noreferrer" className="text-futuristic-cyan-300 hover:text-futuristic-cyan-200 text-lg transition-colors duration-200" onClick={() => analytics.trackContactClick('whatsapp')}>
-                                        +91 9938965598
+                                    <a href="https://wa.me/916370510539" target="_blank" rel="noopener noreferrer" className="text-futuristic-cyan-300 hover:text-futuristic-cyan-200 text-lg transition-colors duration-200" onClick={() => analytics.trackContactClick('whatsapp')}>
+                                        +91 6370510539
                                     </a>
                                     <p className="text-white/60 text-sm">Quick chat about your project</p>
                                 </div>

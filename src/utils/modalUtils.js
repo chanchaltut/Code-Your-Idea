@@ -192,7 +192,7 @@ export const showLetsTalkModal = () => {
         <p style="margin-bottom: 25px; color: #4b5563; font-size: 16px;">Choose how you'd like to connect with us:</p>
         
         <div style="display: flex; flex-direction: column; gap: 15px; max-width: 300px; margin: 0 auto;">
-          <a href="https://wa.me/919938965598?text=Hi! I'm interested in discussing a project with Code Your Idea." 
+          <a href="https://wa.me/916370510539?text=Hi! I'm interested in discussing a project with Code Your Idea." 
              target="_blank" 
              style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; background: #25D366; color: white; text-decoration: none; border-radius: 10px; font-weight: 600; transition: all 0.3s;">
              WhatsApp Chat
@@ -203,7 +203,7 @@ export const showLetsTalkModal = () => {
              Send Email
           </a>
           
-          <button onclick="window.location.href='tel:+919938965598'" 
+          <button onclick="window.location.href='tel:+916370510539'" 
                   style="display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px 20px; background: #1a0a2d; color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
              Call Us Now
           </button>
