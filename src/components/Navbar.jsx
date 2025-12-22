@@ -99,7 +99,7 @@ const Navbar = () => {
                     href="https://wa.me/916370510539"
                     target="_blank"
                     rel="noreferrer"
-                    className="px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold hover:bg-white/10 transition-colors bg-transparent"
+                    className="px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white"
                 >
                     Let's Discuss
                 </a>
@@ -152,7 +152,7 @@ const Navbar = () => {
                     href="https://wa.me/916370510539"
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-auto mb-10 px-6 py-3 rounded-full border border-white text-white font-semibold hover:bg-white/10 transition-colors bg-transparent text-center"
+                    className="mt-auto mb-10 px-6 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white text-center"
                 >
                     Let's Discuss
                 </a>

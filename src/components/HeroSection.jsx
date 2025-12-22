@@ -97,7 +97,7 @@ const HeroSection = () => {
                             </button>
                             <a
                                 href="/#pricing"
-                                className="px-6 sm:px-7 py-3 rounded-full border border-white/40 text-white font-semibold hover:border-white/70 transition-colors bg-white/0 backdrop-blur-[0.5px]"
+                                className="px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white"
                             >
                                 Our Pricing
                             </a>
