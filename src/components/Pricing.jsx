@@ -24,15 +24,10 @@ const PricingCard = ({ title, subtitle, price, description }) => (
             </p>
         </div>
 
-        {/* Button -> Direct WhatsApp lead */}
-        <a
-            href="https://wa.me/916370510539"
-            target="_blank"
-            rel="noreferrer"
-            className="w-full text-center bg-white text-black font-bold py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 transform active:scale-95"
-        >
+        {/* Button */}
+        <button className="w-full bg-white text-black font-bold py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 transform active:scale-95">
             Let's Discuss
-        </a>
+        </button>
     </div>
 );
 

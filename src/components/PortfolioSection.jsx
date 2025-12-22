@@ -73,7 +73,7 @@ const PortfolioSection = () => {
 
                 </motion.div>
 
-                {/* 3. Right Column - Galaxy EdTech (The Mobile Learning App UI) */}
+                {/* 3. Right Column - Galaxy Tutorials (The Mobile Learning App UI) */}
                 <div className="md:col-span-3 md:row-span-2 h-full min-h-[500px] relative bg-[#0f0f11] rounded-[2.5rem] border-[8px] border-[#1a1a1a] shadow-2xl overflow-hidden flex flex-col">
                     <div className="flex justify-between items-center p-6 pt-8">
                         <ChevronRight className="text-gray-400 w-5 h-5 rotate-180" />
@@ -82,7 +82,7 @@ const PortfolioSection = () => {
 
                     <div className="px-6 flex-1 flex flex-col">
                         <div className="mb-6">
-                            <h4 className="text-white font-semibold text-lg">Galaxy EdTech</h4>
+                            <h4 className="text-white font-semibold text-lg">Galaxy Tutorials</h4>
                             <p className="text-gray-500 text-sm">Video Lecture Series</p>
                         </div>
 
@@ -97,7 +97,7 @@ const PortfolioSection = () => {
                             <div className="relative w-44 h-44 rounded-full border-[1px] border-gray-800 flex items-center justify-center bg-gradient-to-b from-purple-900/20 to-black shadow-[0_0_50px_rgba(168,85,247,0.15)]">
                                 <div className="text-center z-10">
                                     <span className="block text-4xl font-bold text-white tracking-tighter">GALAXY</span>
-                                    <span className="text-[10px] text-purple-400 font-bold tracking-widest uppercase">Ed Tech</span>
+                                    <span className="text-[10px] text-purple-400 font-bold tracking-widest uppercase">Tutorials</span>
                                 </div>
                             </div>
                         </div>
@@ -114,7 +114,7 @@ const PortfolioSection = () => {
                         </div>
 
                         <div
-                            onClick={() => handleProjectClick("Galaxy EdTech", "#")}
+                            onClick={() => handleProjectClick("Galaxy Tutorials", "#")}
                             className="bg-indigo-600 rounded-xl p-4 flex justify-center items-center mb-6 cursor-pointer hover:bg-indigo-500 transition-colors"
                         >
                             <span className="text-white text-sm font-bold uppercase tracking-widest">Open App</span>
