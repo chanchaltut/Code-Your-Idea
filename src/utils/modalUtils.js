@@ -183,7 +183,7 @@ export const showQuoteModal = () => {
   });
 };
 
-// Let's Talk Modal
+// Let's Discuss Modal
 export const showLetsTalkModal = () => {
   return Swal.fire({
     title: '💬 Let\'s Talk!',

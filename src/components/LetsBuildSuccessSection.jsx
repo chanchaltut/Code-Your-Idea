@@ -32,7 +32,7 @@ const LetsBuildSuccessSection = () => (
                         }}
                         className="border-2 border-futuristic-blue-400 text-white hover:bg-futuristic-blue-500/20 font-semibold px-8 py-4 rounded-full text-lg transition-all hover:scale-105"
                     >
-                        Let's Talk
+                        Let's Discuss
                     </button>
                 </div>
             </div>

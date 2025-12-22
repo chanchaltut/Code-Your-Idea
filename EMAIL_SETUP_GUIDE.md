@@ -124,7 +124,7 @@ For higher volumes, EmailJS offers paid plans starting at $15/month for 1000 ema
 
 ✅ **Contact Form**: Real emails to contact@codeyouridea.com  
 ✅ **Quote Requests**: Detailed project info via email  
-✅ **Let's Talk Modal**: Direct contact options + email fallback  
+✅ **Let's Discuss Modal**: Direct contact options + email fallback  
 ✅ **All Call-to-Actions**: Every button sends real emails  
 ✅ **Fallback System**: mailto: links if EmailJS fails  
 

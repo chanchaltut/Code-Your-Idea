@@ -24,10 +24,15 @@ const PricingCard = ({ title, subtitle, price, description }) => (
             </p>
         </div>
 
-        {/* Button */}
-        <button className="w-full bg-white text-black font-bold py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 transform active:scale-95">
-            Book a call
-        </button>
+        {/* Button -> Direct WhatsApp lead */}
+        <a
+            href="https://wa.me/916370510539"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full text-center bg-white text-black font-bold py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 transform active:scale-95"
+        >
+            Let's Discuss
+        </a>
     </div>
 );
 
@@ -110,13 +115,6 @@ const PricingSection = () => {
                         ))}
                     </div>
                 </section>
-
-                {/* Footer Link */}
-                <footer className="text-center pb-10">
-                    <button className="text-gray-400 hover:text-white transition-colors text-lg font-light border-b border-gray-700 hover:border-white pb-1">
-                        Learn more
-                    </button>
-                </footer>
             </div>
         </div>
     );

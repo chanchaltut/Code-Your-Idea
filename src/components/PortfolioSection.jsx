@@ -180,9 +180,16 @@ const PortfolioSection = () => {
 
             {/* Footer CTA Button */}
             <div className="flex justify-center mt-16">
-                <button className="group bg-white text-black pl-8 pr-2 py-2 rounded-full flex items-center gap-4 text-lg font-bold hover:bg-gray-200 transition-all hover:scale-105">
-                    Start Your Project
-                    <span className="bg-black text-white p-2 rounded-full group-hover:bg-neutral-800 transition-colors">
+                <button className="group bg-white text-black pl-8 pr-2 py-2 rounded-full flex items-center gap-4 text-lg font-bold transition-all transform duration-700 hover:translate-x-4">
+                    <a
+                        href="https://wa.me/916370510539"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-black bold hover:text-black focus:text-black active:text-black"
+                    >
+                        Start Your Project
+                    </a>
+                    <span className="bg-black text-white p-2 rounded-full ">
                         <ArrowRight className="w-5 h-5" />
                     </span>
                 </button>

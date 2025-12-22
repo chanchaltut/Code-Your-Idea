@@ -153,7 +153,7 @@ const ServicesSection = ({ id }) => {
                             onClick={() => scrollToSection('portfolio')}
                             className="border-2 border-white/30 text-white hover:bg-white/10 font-semibold px-8 py-4 rounded-full text-lg transition-all hover:scale-105"
                         >
-                            Book a Call
+                            Let's Discuss
                         </button>
                     </div>
                 </motion.div>
