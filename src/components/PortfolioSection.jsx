@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { ArrowRight, Wind, Zap, BookOpen, ChevronRight, GraduationCap, Home, Trees, Layout } from 'lucide-react';
 import analytics from "../utils/analytics";
-import jeoBanner from "../assets/images/portfolio/jeo-bg.avif";
+import jeoBanner from "../assets/images/portfolio/Jeo-bg.avif";
 
 const PortfolioSection = () => {
 
