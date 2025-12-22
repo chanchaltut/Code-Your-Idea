@@ -1,9 +1,9 @@
 import React from 'react';
 import Spline from '@splinetool/react-spline';
 
-const AboutSection = () => {
+const AboutSection = ({ id = "about" }) => {
     return (
-        <section className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center py-20">
+        <section id={id} className="relative w-full min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center py-20">
 
             {/* 1. Background "Ghost" Text 
           Placed absolutely to sit behind the 3D element but in front of the background.
@@ -35,14 +35,14 @@ const AboutSection = () => {
             This takes up the middle space. The 'scene' prop handles the interaction.
         */}
                 <div className="h-[400px] md:h-[600px] w-full flex items-center justify-center order-1 md:order-2 relative overflow-visible">
-                    <div className="absolute inset-0 scale-[1.05] origin-center w-[120%] left-1/2 -translate-x-1/2">
+                    <div className="absolute inset-0 scale-[0.95] origin-center w-[120%] left-1/2 -translate-x-1/2">
                         <Spline
                             className="w-full h-full bg-transparent"
                             scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
                         />
                     </div>
                     {/* Overlay to hide any remaining watermark in bottom-right corner */}
-                    <div className="absolute bottom-0 -right-8 w-48 h-12 bg-black z-20 pointer-events-none" />
+                    <div className="absolute bottom-8 -right-8 w-48 h-12 bg-black z-20 pointer-events-none" />
                 </div>
 
                 {/* Right Column Stats */}

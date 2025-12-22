@@ -3,12 +3,12 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import logo from "/logo-w.png";
 
 const navLinks = [
+    { label: "About Us", href: "#about", isHash: true },
     { label: "Our Work", href: "#portfolio", isHash: true },
-    { label: "Solutions", href: "#services", isHash: true },
-    { label: "Process", href: "#process", isHash: true },
+    { label: "Pricing", href: "#pricing", isHash: true },
     { label: "Testimonials", href: "#testimonials", isHash: true },
     { label: "Blog", href: "/blog", isHash: false },
-    { label: "Contact", href: "#contact", isHash: true },
+    { label: "Contact Us", href: "#contact", isHash: true },
 ];
 
 const scrollToSection = (href) => {
@@ -95,12 +95,14 @@ const Navbar = () => {
 
             {/* CTA Buttons */}
             <div className="hidden md:flex items-center gap-4">
-                <button className="px-6 py-2 text-white border border-white/30 rounded-lg hover:bg-white/10 transition-all duration-200">
-                    Log In
-                </button>
-                <button className="px-6 py-2 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-all duration-200">
-                    Start Project
-                </button>
+                <a
+                    href="https://wa.me/916370510539"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold hover:bg-white/10 transition-colors bg-transparent"
+                >
+                    Let's Discuss
+                </a>
             </div>
             {/* Hamburger Icon */}
             <button
@@ -146,6 +148,14 @@ const Navbar = () => {
                         </li>
                     ))}
                 </ul>
+                <a
+                    href="https://wa.me/916370510539"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-auto mb-10 px-6 py-3 rounded-full border border-white text-white font-semibold hover:bg-white/10 transition-colors bg-transparent text-center"
+                >
+                    Let's Discuss
+                </a>
             </aside>
         </nav>
     );
