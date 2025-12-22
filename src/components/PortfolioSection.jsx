@@ -97,7 +97,7 @@ const PortfolioSection = () => {
                             <div className="relative w-44 h-44 rounded-full border-[1px] border-gray-800 flex items-center justify-center bg-gradient-to-b from-purple-900/20 to-black shadow-[0_0_50px_rgba(168,85,247,0.15)]">
                                 <div className="text-center z-10">
                                     <span className="block text-4xl font-bold text-white tracking-tighter">GALAXY</span>
-                                    <span className="text-[10px] text-purple-400 font-bold tracking-widest uppercase">Ed</span>
+                                    <span className="text-[10px] text-purple-400 font-bold tracking-widest uppercase">Ed Tech</span>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +140,7 @@ const PortfolioSection = () => {
                             <h3 className="text-2xl font-bold text-white max-w-[200px] leading-tight mb-2">
                                 Crafting High Performance
                             </h3>
-                            <span className="text-purple-300 text-sm font-bold tracking-wider uppercase">Jeo Group Platform</span>
+                            <span className="ml-4 text-purple-300 text-sm font-bold tracking-wider uppercase">Jeo Group Platform</span>
                         </div>
                         <div className="flex gap-8 text-xs font-bold tracking-widest text-white/60">
                             <span>REACT</span>
