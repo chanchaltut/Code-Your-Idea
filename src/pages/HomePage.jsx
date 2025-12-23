@@ -8,7 +8,7 @@ import PortfolioSection from '../components/PortfolioSection';
 import PricingSection from '../components/Pricing';
 import TestimonialSection from '../components/TestimonialSection';
 import TopClientsSection from '../components/TopClientsSection';
-import ContactFooterSection from '../components/ContactFooterSection';
+import Footer from '../components/ContactFooterSection';
 import ScrollToTop from '../components/ScrollToTop';
 
 // Register GSAP plugins
@@ -81,7 +81,7 @@ const HomePage = () => {
                     <PortfolioSection id="portfolio" />
                     <PricingSection id="pricing" />
                     <TestimonialSection id="testimonials" />
-                    <ContactFooterSection id="contact" />
+                    <Footer id="footer" />
                 </main>
                 <ScrollToTop />
             </div>
