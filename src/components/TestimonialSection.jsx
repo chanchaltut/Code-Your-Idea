@@ -1,11 +1,12 @@
 import React from 'react';
-import { Star, Mic, Play } from 'lucide-react';
+import { Star, Mic, Play, ExternalLink } from 'lucide-react';
 import anikBanner from "../assets/images/testimonial/anik.webp";
 import rentYaard from "../assets/images/testimonial/rentyaard.png";
 import sSahuBanner from "../assets/images/testimonial/s-sahu.webp";
 import galaxyTutorials from "../assets/images/testimonial/galaxy-tutorials.png";
 import alokBanner from "../assets/images/testimonial/alok.webp";
 import tot from "../assets/images/testimonial/tot.png";
+import ankitaBanner from "../assets/images/testimonial/ankita.webp";
 
 const TestimonialSection = () => {
     return (
@@ -120,11 +121,12 @@ const TestimonialSection = () => {
                         </p>
                     </div>
 
-                    {/* Card 5: Video Testimonial 1 */}
-                    <VideoCard
-                        name="Yuri Drabik"
-                        date="June 05, 2025"
-                        image="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500&auto=format&fit=crop&q=80"
+                    {/* Card 5: Video Testimonial 1 - Ankitarani Deep */}
+                    <YouTubeVideoCard
+                        name="Ankitarani Deep"
+                        date="October 05, 2025"
+                        videoId="lINmr0gjcu0"
+                        thumbnail={ankitaBanner}
                     />
 
                     {/* Card 6: Audio Player 1 */}
@@ -134,7 +136,7 @@ const TestimonialSection = () => {
                 {/* --- COLUMN 3 --- */}
                 <div className="flex flex-col gap-6">
                     {/* Card 7: Audio Player 2 */}
-                    <AudioCard date="October 23, 2024" />
+                    <AudioCard date="June 23, 2025" />
 
                     {/* Card 8: Tobi Smith (Uber Style) */}
                     <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
@@ -218,6 +220,300 @@ const VideoCard = ({ name, date, image }) => (
         </div>
     </div>
 );
+
+const YouTubeVideoCard = ({ name, date, videoId, thumbnail }) => {
+    const [isPlaying, setIsPlaying] = React.useState(true);
+    const [isMuted, setIsMuted] = React.useState(true);
+    const [player, setPlayer] = React.useState(null);
+    const [isBuffering, setIsBuffering] = React.useState(false);
+    const containerRef = React.useRef(null);
+
+    React.useEffect(() => {
+        let ytPlayer = null;
+        const containerId = `youtube-player-${videoId}`;
+
+        // Load YouTube IFrame API
+        const loadYouTubeAPI = () => {
+            if (window.YT && window.YT.Player) {
+                initializePlayer();
+            } else {
+                if (!document.getElementById('youtube-iframe-api')) {
+                    const tag = document.createElement('script');
+                    tag.id = 'youtube-iframe-api';
+                    tag.src = 'https://www.youtube.com/iframe_api';
+                    const firstScriptTag = document.getElementsByTagName('script')[0];
+                    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                }
+
+                window.onYouTubeIframeAPIReady = () => {
+                    initializePlayer();
+                };
+            }
+        };
+
+        const initializePlayer = () => {
+            if (containerRef.current && window.YT && window.YT.Player) {
+                ytPlayer = new window.YT.Player(containerId, {
+                    videoId: videoId,
+                    width: '100%',
+                    height: '100%',
+                    playerVars: {
+                        autoplay: 1,
+                        mute: 1,
+                        loop: 1,
+                        playlist: videoId,
+                        controls: 0,
+                        modestbranding: 1,
+                        rel: 0,
+                        playsinline: 1,
+                        iv_load_policy: 3,
+                        showinfo: 0,
+                        fs: 0,
+                        cc_load_policy: 0,
+                        // Quality settings - prefer best available, minimum 360p
+                        vq: 'hd720', // Prefer 720p, falls back to best available
+                        // Enable smooth playback
+                        enablejsapi: 1,
+                        // Preload for smoother playback
+                        preload: 'auto',
+                    },
+                    events: {
+                        onReady: (event) => {
+                            const playerInstance = event.target;
+                            setPlayer(playerInstance);
+
+                            // Set quality to best available (minimum 360p)
+                            try {
+                                // Try to set quality - YouTube will use best available
+                                const availableQualities = playerInstance.getAvailableQualityLevels();
+                                if (availableQualities && availableQualities.length > 0) {
+                                    // Prefer higher quality, but ensure at least medium (360p)
+                                    const preferredQualities = ['hd720', 'hd1080', 'highres', 'medium'];
+                                    for (const quality of preferredQualities) {
+                                        if (availableQualities.includes(quality)) {
+                                            playerInstance.setPlaybackQuality(quality);
+                                            break;
+                                        }
+                                    }
+                                    // Fallback: ensure minimum medium quality
+                                    if (!availableQualities.includes('medium') && availableQualities.includes('small')) {
+                                        playerInstance.setPlaybackQuality('small'); // 360p
+                                    }
+                                }
+                            } catch (e) {
+                                console.log('Quality setting handled by YouTube automatically');
+                            }
+
+                            // Ensure video plays smoothly
+                            try {
+                                playerInstance.playVideo();
+                            } catch (e) {
+                                console.log('Video autoplay initiated');
+                            }
+                        },
+                        onStateChange: (event) => {
+                            const playerInstance = event.target;
+                            // 1 = playing, 2 = paused, 3 = buffering, 5 = cued
+                            const state = event.data;
+
+                            if (state === 1) { // Playing
+                                setIsPlaying(true);
+                                setIsBuffering(false);
+                                // Ensure quality is maintained during playback
+                                try {
+                                    const currentQuality = playerInstance.getPlaybackQuality();
+                                    if (currentQuality === 'tiny' || currentQuality === 'small') {
+                                        // Try to upgrade quality if better is available
+                                        const availableQualities = playerInstance.getAvailableQualityLevels();
+                                        if (availableQualities && availableQualities.includes('medium')) {
+                                            playerInstance.setPlaybackQuality('medium');
+                                        }
+                                    }
+                                } catch (e) {
+                                    // Quality handled automatically
+                                }
+                            } else if (state === 2) { // Paused
+                                setIsPlaying(false);
+                                setIsBuffering(false);
+                            } else if (state === 3) { // Buffering
+                                setIsBuffering(true);
+                                // Video is buffering - ensure it continues playing when ready
+                                const bufferCheck = setInterval(() => {
+                                    try {
+                                        const currentState = playerInstance.getPlayerState();
+                                        if (currentState === 1) { // Playing
+                                            setIsBuffering(false);
+                                            clearInterval(bufferCheck);
+                                        } else if (currentState === 3) { // Still buffering
+                                            // Keep trying to play
+                                            playerInstance.playVideo();
+                                        } else {
+                                            clearInterval(bufferCheck);
+                                        }
+                                    } catch (e) {
+                                        clearInterval(bufferCheck);
+                                    }
+                                }, 500);
+
+                                // Clear interval after 10 seconds to prevent infinite loop
+                                setTimeout(() => clearInterval(bufferCheck), 10000);
+                            } else if (state === 5) { // Cued
+                                setIsBuffering(false);
+                                // Video is cued and ready - play it
+                                try {
+                                    playerInstance.playVideo();
+                                } catch (e) {
+                                    // Continue
+                                }
+                            }
+                        },
+                        onError: (event) => {
+                            // Handle errors gracefully - try to recover
+                            console.log('YouTube player error:', event.data);
+                            if (event.data === 150 || event.data === 101 || event.data === 100) {
+                                // Video unavailable or restricted - try to reload
+                                setTimeout(() => {
+                                    try {
+                                        if (ytPlayer) {
+                                            ytPlayer.loadVideoById(videoId);
+                                        }
+                                    } catch (e) {
+                                        console.error('Error recovering from playback error:', e);
+                                    }
+                                }, 2000);
+                            }
+                        },
+                    },
+                });
+            }
+        };
+
+        // Create container div for YouTube player
+        if (containerRef.current) {
+            const playerDiv = document.createElement('div');
+            playerDiv.id = containerId;
+            playerDiv.style.cssText = 'position: absolute; top: 50%; left: 50%; width: 120%; height: 120%; transform: translate(-50%, -50%); pointer-events: none;';
+            containerRef.current.appendChild(playerDiv);
+        }
+
+        loadYouTubeAPI();
+
+        return () => {
+            if (ytPlayer) {
+                try {
+                    ytPlayer.destroy();
+                } catch (e) {
+                    console.error('Error destroying player:', e);
+                }
+            }
+        };
+    }, [videoId]);
+
+    const togglePlayPause = () => {
+        if (player) {
+            try {
+                if (isPlaying) {
+                    player.pauseVideo();
+                } else {
+                    player.playVideo();
+                }
+            } catch (e) {
+                console.error('Error toggling play/pause:', e);
+            }
+        }
+    };
+
+    const toggleMute = () => {
+        if (player) {
+            try {
+                if (isMuted) {
+                    player.unMute();
+                    setIsMuted(false);
+                } else {
+                    player.mute();
+                    setIsMuted(true);
+                }
+            } catch (e) {
+                console.error('Error toggling mute:', e);
+            }
+        }
+    };
+
+    return (
+        <div className="relative group overflow-hidden rounded-[1.5rem] h-64 shadow-lg hover:-translate-y-1 transition-transform duration-300">
+            {/* YouTube iframe container */}
+            <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden rounded-[1.5rem]"></div>
+
+            {/* Gradient overlay to maintain aesthetics */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none rounded-[1.5rem]"></div>
+
+            {/* Buffering indicator (subtle) */}
+            {isBuffering && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-5">
+                    <div className="bg-black/40 backdrop-blur-sm rounded-full p-3">
+                        <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    </div>
+                </div>
+            )}
+
+            {/* Custom Play/Pause, Mute, and YouTube Link Controls */}
+            <div className="absolute top-4 right-4 flex gap-2 z-20">
+                <button
+                    onClick={toggleMute}
+                    className="bg-white/20 backdrop-blur-md p-2.5 rounded-full border border-white/50 hover:bg-white/30 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    aria-label={isMuted ? "Unmute" : "Mute"}
+                >
+                    {isMuted ? (
+                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                        </svg>
+                    ) : (
+                        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                    )}
+                </button>
+                <button
+                    onClick={togglePlayPause}
+                    className="bg-white/20 backdrop-blur-md p-2.5 rounded-full border border-white/50 hover:bg-white/30 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    aria-label={isPlaying ? "Pause" : "Play"}
+                >
+                    {isPlaying ? (
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+                        </svg>
+                    ) : (
+                        <Play className="w-5 h-5 text-white fill-white" />
+                    )}
+                </button>
+                <a
+                    href={`https://www.youtube.com/watch?v=${videoId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white/20 backdrop-blur-md p-2.5 rounded-full border border-white/50 hover:bg-white/30 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    aria-label="Watch on YouTube"
+                    title="Watch on YouTube"
+                >
+                    <ExternalLink className="w-5 h-5 text-white" />
+                </a>
+            </div>
+
+            {/* Name and Date overlay */}
+            <div className="absolute bottom-4 left-4 flex items-center gap-3 pointer-events-none z-10">
+                <img
+                    src={thumbnail}
+                    alt={name}
+                    className="w-10 h-10 rounded-full border-2 border-white object-cover"
+                />
+                <div>
+                    <h4 className="text-white font-bold text-sm">{name}</h4>
+                    <p className="text-white/60 text-xs">{date}</p>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const AudioCard = ({ date }) => (
     <div className="bg-[#5b50ff] rounded-[1.5rem] p-6 text-white relative overflow-hidden shadow-lg hover:-translate-y-1 transition-transform duration-300 h-48 flex flex-col justify-between">
