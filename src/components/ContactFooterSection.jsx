@@ -17,7 +17,6 @@ const useTypewriter = (words, typingSpeed = 150, deletingSpeed = 80, pauseDurati
     const [reverse, setReverse] = useState(false);
     const [blink, setBlink] = useState(true);
 
-    // Blinking cursor loop (independent of typing)
     useEffect(() => {
         const timeout2 = setTimeout(() => {
             setBlink((prev) => !prev);
@@ -25,22 +24,18 @@ const useTypewriter = (words, typingSpeed = 150, deletingSpeed = 80, pauseDurati
         return () => clearTimeout(timeout2);
     }, [blink]);
 
-    // Typing logic loop
     useEffect(() => {
-        // 1. Word Finished? Wait then Delete.
         if (subIndex === words[index].length && !reverse) {
             const timeout = setTimeout(() => setReverse(true), pauseDuration);
             return () => clearTimeout(timeout);
         }
 
-        // 2. Deletion Finished? Next Word.
         if (subIndex === 0 && reverse) {
             setReverse(false);
             setIndex((prev) => (prev + 1) % words.length);
             return;
         }
 
-        // 3. Typing / Deleting step
         const timeout = setTimeout(() => {
             setSubIndex((prev) => prev + (reverse ? -1 : 1));
         }, reverse ? deletingSpeed : typingSpeed);
@@ -59,115 +54,150 @@ const TypewriterText = () => {
     const { text, blink } = useTypewriter(TYPEWRITER_WORDS);
 
     return (
-        // OUTER CONTAINER: Fixed Min-Width prevents the layout jump.
-        // "Solutions" is roughly 5em wide in this font weight. 
-        // We use text-left to ensure typing starts from the left.
         <span className="text-blue-600 inline-block min-w-[5.5em] text-left align-top">
-
-            {/* INNER SPAN: Grows as text is typed. Cursor hangs off the right edge. */}
             <span className="relative inline-block">
                 {text}
-
-                {/* CURSOR: Absolute positioned relative to the TEXT, not the container */}
                 <span className={`absolute -right-[0.2em] top-[0.1em] bottom-[0.15em] w-[0.08em] bg-blue-600 transition-opacity duration-100 ${blink ? 'opacity-100' : 'opacity-0'}`}></span>
             </span>
         </span>
     );
 };
 
-// Phone Number Input Component
+// --- FIXED PHONE INPUT COMPONENT ---
 const PhoneNumberInput = ({ formData, setFormData, error }) => {
     const [country, setCountry] = useState("in");
 
-    // Auto-detect country from IP
     useEffect(() => {
-        fetch("https://ipinfo.io/json")
+        fetch("https://ipinfo.io/json?token=YOUR_TOKEN_HERE")
             .then(res => res.json())
             .then(data => {
                 if (data?.country) {
                     setCountry(data.country.toLowerCase());
                 }
             })
-            .catch(() => setCountry("in")); // fallback to India
+            .catch(() => setCountry("us"));
     }, []);
 
     return (
-        <div className="w-full [&_.react-tel-input]:h-auto">
+        <div className="w-full relative group">
             <style>{`
+                /* OVERRIDE ALL DEFAULT STYLES TO MATCH TAILWIND */
                 .react-tel-input {
+                    font-family: inherit !important;
                     width: 100% !important;
-                    height: auto !important;
-                    overflow: hidden !important;
+                    position: relative !important;
                 }
-                .react-tel-input .flag-dropdown {
+
+                /* 1. INPUT FIELD - Remove fixed height, use padding to match 'py-3' */
+                .react-tel-input .form-control {
+                    width: 100% !important;
+                    height: auto !important; /* Allow padding to define height */
+                    padding-top: 0.75rem !important;    /* Tailwind py-3 approx 12px */
+                    padding-bottom: 0.75rem !important; /* Tailwind py-3 approx 12px */
+                    padding-left: 58px !important;      /* Space for flag */
                     background-color: #1c1c1e !important;
                     border: 1px solid ${error ? '#ef4444' : 'rgba(255, 255, 255, 0.1)'} !important;
-                    border-right: none !important;
+                    border-radius: 0.75rem !important; /* rounded-xl */
+                    color: white !important;
+                    font-size: 0.875rem !important; /* text-sm */
+                    line-height: 1.25rem !important;
+                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                }
+                .react-tel-input .form-control:focus {
+                    border-color: #3b82f6 !important;
+                    box-shadow: none !important;
+                }
+                .react-tel-input .form-control::placeholder {
+                    color: #6b7280 !important;
+                }
+
+                /* 2. FLAG CONTAINER - Transparent & Aligned */
+                .react-tel-input .flag-dropdown {
+                    background-color: transparent !important;
+                    border: none !important;
                     border-radius: 0.75rem 0 0 0.75rem !important;
+                    bottom: 2px !important;
+                    top: 2px !important;
+                    left: 1px !important;
                 }
                 .react-tel-input .flag-dropdown.open {
-                    background-color: #1c1c1e !important;
-                    border-color: ${error ? '#ef4444' : '#3b82f6'} !important;
-                }
-                .react-tel-input .flag-dropdown.open .selected-flag {
-                    background-color: #1c1c1e !important;
+                    background-color: transparent !important;
+                    width: auto !important;
                 }
                 .react-tel-input .selected-flag {
-                    background-color: #1c1c1e !important;
+                    background-color: transparent !important;
                     border-radius: 0.75rem 0 0 0.75rem !important;
-                    padding: 12px 8px 12px 12px !important;
-                    display: flex !important;
-                    align-items: center !important;
-                    
+                    width: 46px !important;
+                    padding-left: 14px !important;
                 }
-                .react-tel-input .selected-flag:hover {
-                    background-color: #1c1c1e !important;
-                }
+                .react-tel-input .selected-flag:hover, 
                 .react-tel-input .selected-flag:focus {
-                    background-color: #1c1c1e !important;
-                }
-                .react-tel-input .flag-dropdown .arrow {
-                    border-top-color: rgba(255, 255, 255, 0.5) !important;
-                    margin-top: -2px !important;
-                }
-                .react-tel-input .flag-dropdown.open .arrow {
-                    border-bottom-color: rgba(255, 255, 255, 0.5) !important;
-                }
-                .react-tel-input .country-list {
-                    background-color: #1c1c1e !important;
-                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                    border-radius: 0.75rem !important;
-                    max-height: 240px !important;
-                    margin-top: 4px !important;
-                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
-                }
-                .react-tel-input .country-list .country {
-                    color: white !important;
-                    padding: 8px 12px !important;
-                }
-                .react-tel-input .country-list .country:hover {
                     background-color: rgba(255, 255, 255, 0.05) !important;
                 }
-                .react-tel-input .country-list .country.highlight {
+                .react-tel-input .selected-flag .arrow {
+                    border-top-color: #9ca3af !important;
+                }
+                .react-tel-input .selected-flag.open .arrow {
+                    border-bottom-color: #9ca3af !important;
+                }
+
+                /* 3. DROPDOWN MENU - ABSOLUTE POSITIONING TO PREVENT SHAKE */
+                .react-tel-input .country-list {
+                    position: absolute !important;
+                    top: 100% !important;
+                    left: 0 !important;
+                    z-index: 9999 !important; /* Float above everything */
+                    margin-top: 8px !important;
+                    background-color: #1c1c1e !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    color: white !important;
+                    border-radius: 0.75rem !important;
+                    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
+                    max-width: 220px !important; /* Cap width for larger screens if needed */
+                    max-height: 240px !important;
+                }
+                
+                /* List Items */
+                .react-tel-input .country-list .country {
+                    padding: 10px 12px !important;
+                    transition: background-color 0.15s ease !important;
+                }
+                .react-tel-input .country-list .country:hover {
                     background-color: rgba(255, 255, 255, 0.1) !important;
                 }
+                .react-tel-input .country-list .country.highlight {
+                    background-color: rgba(59, 130, 246, 0.2) !important;
+                }
+                .react-tel-input .country-list .country-name {
+                    color: #e5e7eb !important;
+                    font-size: 0.875rem !important;
+                }
+                .react-tel-input .country-list .dial-code {
+                    color: #9ca3af !important;
+                }
+
+                /* Search Box */
+                .react-tel-input .country-list .search {
+                    background-color: #2c2c2e !important;
+                    padding: 8px !important;
+                }
                 .react-tel-input .country-list .search-box {
-                    background-color: #1c1c1e !important;
-                    border: none !important;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+                    background-color: #111111 !important;
+                    border: 1px solid rgba(255, 255, 255, 0.1) !important;
                     color: white !important;
-                    padding: 12px !important;
+                    border-radius: 6px !important;
+                    width: 100% !important;
+                    padding: 8px 12px !important;
                     margin: 0 !important;
                 }
                 .react-tel-input .country-list .search-box::placeholder {
-                    color: rgba(156, 163, 175, 1) !important;
-                }
-                .react-tel-input .country-list .search-box:focus {
-                    outline: none !important;
+                    color: #6b7280 !important;
                 }
             `}</style>
+
             <PhoneInput
                 country={country}
+                countryCodeEditable={false}
                 value={formData.phone}
                 onChange={(value, countryData) => {
                     setFormData({
@@ -178,15 +208,14 @@ const PhoneNumberInput = ({ formData, setFormData, error }) => {
                 }}
                 inputProps={{
                     name: "phone",
-                    required: false
+                    required: false,
+                    autoFocus: false
                 }}
-                enableSearch
-                countryCodeEditable={false}
-                inputClass={`!w-full !bg-[#1c1c1e] !border ${error ? '!border-red-500' : '!border-white/10'} !rounded-xl !rounded-l-none !py-3 !pl-14 !pr-4 !text-sm !text-white focus:!outline-none focus:!border-blue-500 !transition-colors !placeholder-gray-500`}
-                buttonClass={`!bg-[#1c1c1e] !border ${error ? '!border-red-500' : '!border-white/10'} !rounded-l-xl !border-r-0`}
-                dropdownClass="!bg-[#1c1c1e] !text-white"
-                containerClass="!w-full"
+                enableSearch={true}
+                disableSearchIcon={true}
+                searchPlaceholder="Search..."
                 placeholder="Phone number"
+                containerClass="!w-full"
             />
         </div>
     );
@@ -222,14 +251,17 @@ const ContactFooterSection = ({ id }) => {
 
     const validateForm = () => {
         const newErrors = {};
+
+        // Strict Regex: Requires TLD, no special chars, min 2 char domain suffix
+        const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
         if (!formData.name.trim()) newErrors.name = "Name is required";
         if (!formData.email.trim()) {
-            newErrors.email = "Email is required";
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "Email is invalid";
+            newErrors.email = "Email required";
+        } else if (!strictEmailRegex.test(formData.email)) {
+            newErrors.email = "Please enter a valid business email (e.g., name@company.com)";
         }
-        // Phone validation (optional but if provided, should be valid)
-        if (formData.phone && formData.phone.length < 8) {
+        if (formData.phone && formData.phone.length < 5) {
             newErrors.phone = "Please enter a valid phone number";
         }
         if (!formData.message.trim()) newErrors.message = "Message is required";
@@ -247,12 +279,16 @@ const ContactFooterSection = ({ id }) => {
         }
 
         setIsSubmitted(true);
-        // Format phone number with country code for submission (PhoneInput value already includes country code digits)
-        const formDataToSubmit = {
+
+        // Ensure phone has + prefix for backend
+        const formattedPhone = formData.phone ? `+${formData.phone}` : "";
+
+        const submissionData = {
             ...formData,
-            phone: formData.phone ? `+${formData.phone}` : ""
+            phone: formattedPhone
         };
-        const success = await handleContactSubmission(formDataToSubmit);
+
+        const success = await handleContactSubmission(submissionData);
 
         if (success) {
             if (analytics) analytics.trackFormSubmission('contact_form', true);
@@ -279,86 +315,88 @@ const ContactFooterSection = ({ id }) => {
                     initial={{ opacity: 0, x: -50 }}
                     animate={inView ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.8 }}
-                    className="w-full lg:w-[520px] bg-[#111111] p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden"
+                    className="w-full lg:w-[520px] bg-[#111111] p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-visible" // CHANGED to overflow-visible so dropdown can float
                 >
-                    <h3 className="text-3xl font-bold mb-2 text-white">Let’s Create What Lasts</h3>
-                    <p className="text-gray-400 text-sm mb-8 leading-relaxed">
-                        Every great story begins with a conversation. Let’s create yours.
-                    </p>
+                    <div className="relative z-10"> {/* Content wrapper */}
+                        <h3 className="text-3xl font-bold mb-2 text-white">Let’s Create What Lasts</h3>
+                        <p className="text-gray-400 text-sm mb-8 leading-relaxed">
+                            Every great story begins with a conversation. Let’s create yours.
+                        </p>
 
-                    {isSubmitted ? (
-                        <div className="text-center py-20">
-                            <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                            </div>
-                            <h4 className="text-xl font-bold text-white mb-2">Message Sent!</h4>
-                            <p className="text-gray-400">We'll respond within 24 hours.</p>
-                        </div>
-                    ) : (
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        placeholder="Name *"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        className={`w-full bg-[#1c1c1e] border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors placeholder-gray-500`}
-                                    />
+                        {isSubmitted ? (
+                            <div className="text-center py-20">
+                                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
+                                    <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
                                 </div>
-                                <div>
-                                    <PhoneNumberInput
-                                        formData={formData}
-                                        setFormData={setFormData}
-                                        error={errors.phone}
-                                    />
-                                    {errors.phone && (
-                                        <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-                                    )}
-                                </div>
+                                <h4 className="text-xl font-bold text-white mb-2">Message Sent!</h4>
+                                <p className="text-gray-400">We'll respond within 24 hours.</p>
                             </div>
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Email Address *"
-                                value={formData.email}
-                                onChange={handleChange}
-                                className={`w-full bg-[#1c1c1e] border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors placeholder-gray-500`}
-                            />
-                            <div className="relative">
-                                <select
-                                    name="project"
-                                    value={formData.project}
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-20"> {/* z-20 for inputs */}
+                                    <div>
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            placeholder="Name *"
+                                            value={formData.name}
+                                            onChange={handleChange}
+                                            className={`w-full bg-[#1c1c1e] border ${errors.name ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors placeholder-gray-500`}
+                                        />
+                                    </div>
+                                    <div className="relative">
+                                        <PhoneNumberInput
+                                            formData={formData}
+                                            setFormData={setFormData}
+                                            error={errors.phone}
+                                        />
+                                        {errors.phone && (
+                                            <p className="text-red-500 text-xs mt-1 ml-1 absolute">{errors.phone}</p>
+                                        )}
+                                    </div>
+                                </div>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Email Address *"
+                                    value={formData.email}
                                     onChange={handleChange}
-                                    className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer"
-                                >
-                                    <option value="" disabled hidden className="text-gray-500">Select Project Type</option>
-                                    <option value="website" className="text-white">Website Development</option>
-                                    <option value="app" className="text-white">Mobile App Development</option>
-                                    <option value="both" className="text-white">Website + App</option>
-                                    <option value="consultation" className="text-white">Just a Consultation</option>
-                                    <option value="undecided" className="text-white">Not decided yet</option>
-                                </select>
-                                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                    <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    className={`w-full bg-[#1c1c1e] border ${errors.email ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors placeholder-gray-500`}
+                                />
+                                <div className="relative">
+                                    <select
+                                        name="project"
+                                        value={formData.project}
+                                        onChange={handleChange}
+                                        className="w-full bg-[#1c1c1e] border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer"
+                                    >
+                                        <option value="" disabled hidden className="text-gray-500">Select Project Type</option>
+                                        <option value="website" className="text-white">Website Development</option>
+                                        <option value="app" className="text-white">Mobile App Development</option>
+                                        <option value="both" className="text-white">Website + App</option>
+                                        <option value="consultation" className="text-white">Just a Consultation</option>
+                                        <option value="undecided" className="text-white">Not decided yet</option>
+                                    </select>
+                                    <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                                    </div>
                                 </div>
-                            </div>
-                            <textarea
-                                name="message"
-                                placeholder="Tell us about your project... *"
-                                rows="4"
-                                value={formData.message}
-                                onChange={handleChange}
-                                className={`w-full bg-[#1c1c1e] border ${errors.message ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors resize-none placeholder-gray-500`}
-                            ></textarea>
-                            <button type="submit" className="w-full bg-white text-black font-bold rounded-full py-4 mt-2 hover:bg-gray-200 transition-all duration-300 transform hover:scale-[1.02]">
-                                Send Message
-                            </button>
-                        </form>
-                    )}
+                                <textarea
+                                    name="message"
+                                    placeholder="Tell us about your project... *"
+                                    rows="4"
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    className={`w-full bg-[#1c1c1e] border ${errors.message ? 'border-red-500' : 'border-white/10'} rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors resize-none placeholder-gray-500`}
+                                ></textarea>
+                                <button type="submit" className="w-full bg-white text-black font-bold rounded-full py-4 mt-2 hover:bg-gray-200 transition-all duration-300 transform hover:scale-[1.02]">
+                                    Send Message
+                                </button>
+                            </form>
+                        )}
+                    </div>
                 </motion.div>
 
                 {/* Right: Big Headline with FIXED Typewriter */}
@@ -408,12 +446,12 @@ const ContactFooterSection = ({ id }) => {
                     <h4 className="text-white font-bold mb-2 text-sm">Contact</h4>
                     <div className="text-white/60 text-sm font-sans font-semibold">
                         <a href="mailto:contact@codeyouridea.com" onClick={() => analytics.trackContactClick('email')} className="text-white/60 hover:text-white transition-colors">
-                            Contact Email
+                            contact@codeyouridea.com
                         </a>
                     </div>
                     <div className="text-white/60 text-sm font-sans font-semibold">
                         <a href="tel:+916370510539" onClick={() => analytics.trackContactClick('phone')} className="text-white/60 hover:text-white transition-colors">
-                            Phone Number
+                            +91 6370510539
                         </a>
                     </div>
                     <a href="https://wa.me/916370510539" onClick={() => analytics.trackContactClick('whatsapp')} className="text-white/60 hover:text-white transition-colors text-sm font-sans font-semibold">
