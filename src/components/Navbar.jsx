@@ -51,20 +51,20 @@ const Navbar = () => {
 
     return (
         <nav
-            className={`fixed top-0 left-0 w-full flex items-center justify-between transition-all duration-300 z-50 px-4 md:px-8
+            className={`fixed top-0 left-0 w-full flex items-center justify-between transition-all duration-300 z-50 px-4 nav:px-8
                 ${scrolled
-                    ? "backdrop-blur-md bg-black/40 border-b border-white/10 py-2 md:py-3"
-                    : "bg-transparent py-4 md:py-6"}
+                    ? "backdrop-blur-md bg-black/40 border-b border-white/10 py-2 nav:py-3"
+                    : "bg-transparent py-4 nav:py-6"}
             `}
         >
             {/* Logo */}
             <div className="flex items-center gap-2">
                 <Link to="/">
-                    <img src={logo} alt="CodeYourIdea Logo" className="h-10 w-auto" />
+                    <img src={logo} alt="CodeYourIdea Logo" className="cyi-logo h-10 w-auto" />
                 </Link>
             </div>
             {/* Desktop Nav */}
-            <ul className="hidden md:flex gap-8 text-lg font-medium text-white">
+            <ul className="hidden nav:flex gap-8 text-lg font-medium text-white">
                 {navLinks.map((link) => (
                     <li key={link.label}>
                         {link.isHash ? (
@@ -94,19 +94,19 @@ const Navbar = () => {
             </ul>
 
             {/* CTA Buttons */}
-            <div className="hidden md:flex items-center gap-4">
+            <div className="hidden nav:flex items-center gap-4">
                 <a
                     href="https://wa.me/916370510539"
                     target="_blank"
                     rel="noreferrer"
-                    className="px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white"
+                    className="discuss-btn px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white"
                 >
                     Let's Discuss
                 </a>
             </div>
             {/* Hamburger Icon */}
             <button
-                className="md:hidden flex flex-col justify-center items-center w-10 h-10 group relative z-50"
+                className="nav:hidden flex flex-col justify-center items-center w-10 h-10 group relative z-50"
                 aria-label="Open menu"
                 onClick={() => setSidebarOpen((open) => !open)}
             >

@@ -9,6 +9,7 @@ export default {
       screens: {
         'xs': '475px',
         'tablet': '768px',
+        'nav': '1000px',
         'laptop': '1024px',
       },
       height: {

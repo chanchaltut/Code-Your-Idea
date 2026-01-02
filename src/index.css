@@ -334,3 +334,19 @@ select {
     background-color: var(--color-bg-primary);
   }
 }
+
+@media (min-width: 768px) and (max-width: 1150px) {
+  nav a {
+    font-size: 0.9rem;
+  }
+
+  .discuss-btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .cyi-logo {
+    height: 2rem;
+    width: auto;
+  }
+}
