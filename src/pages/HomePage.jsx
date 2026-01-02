@@ -42,17 +42,20 @@ const HomePage = () => {
                 );
             });
 
-            // Parallax effect for background elements
-            gsap.to('.parallax-bg', {
-                yPercent: -50,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: "body",
-                    start: "top top",
-                    end: "bottom top",
-                    scrub: true
-                }
-            });
+            // Parallax effect for background elements (only if element exists)
+            const parallaxElement = document.querySelector('.parallax-bg');
+            if (parallaxElement) {
+                gsap.to('.parallax-bg', {
+                    yPercent: -50,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: "body",
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+            }
         };
 
         // Wait for components to mount

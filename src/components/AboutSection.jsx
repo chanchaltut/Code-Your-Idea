@@ -1,5 +1,43 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Spline from '@splinetool/react-spline';
+import SplineErrorBoundary from './SplineErrorBoundary';
+
+// Loading fallback component
+const SplineLoadingFallback = () => (
+    <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center">
+            <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin"></div>
+            </div>
+            <p className="text-white/60 text-sm">Loading 3D Model...</p>
+        </div>
+    </div>
+);
+
+// Error fallback component (matches the ErrorBoundary fallback)
+const SplineErrorFallback = () => (
+    <div className="w-full h-full flex items-center justify-center">
+        <div className="text-center">
+            <div className="w-32 h-32 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center">
+                <svg
+                    className="w-16 h-16 text-white/40"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                    />
+                </svg>
+            </div>
+            <p className="text-white/60 text-sm">3D Scene Unavailable</p>
+            <p className="text-white/40 text-xs mt-2">Please check your connection</p>
+        </div>
+    </div>
+);
 
 const AboutSection = ({ id = "about" }) => {
     return (
@@ -8,8 +46,8 @@ const AboutSection = ({ id = "about" }) => {
             {/* 1. Background "Ghost" Text 
           Placed absolutely to sit behind the 3D element but in front of the background.
       */}
-            <div className="absolute top-4 md:top-4 inset-x-0 z-0 flex flex-col items-center justify-center select-none pointer-events-none">
-                <h2 className="text-xl md:text-3xl lg:text-5xl font-bold text-[#1a1a1a] text-center tracking-tighter leading-none">
+            <div className="absolute top-4 md:top-4 inset-x-0 z-0 flex flex-col items-center justify-center select-none group cursor-default">
+                <h2 className="text-xl md:text-3xl lg:text-5xl font-bold text-[#1a1a1a] text-center tracking-tighter leading-none transition-colors duration-500 group-hover:text-white group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] group-hover:drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
                     WE HELP
                     <br />
                     BUSINESSES SUCCEED.
@@ -17,10 +55,10 @@ const AboutSection = ({ id = "about" }) => {
             </div>
 
             {/* 2. Main Grid Layout */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center mt-10 md:mt-0">
+            <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 items-center mt-10 md:mt-0 stats-container">
 
                 {/* Left Column Stats */}
-                <div className="flex flex-col gap-20 md:gap-40 items-center md:items-end text-center md:text-right px-6 order-2 md:order-1">
+                <div className="flex flex-col gap-20 md:gap-40 items-center md:items-end text-center md:text-right px-6 order-2 md:order-1 stat-container">
                     <StatBlock
                         number="25+"
                         label="INDUSTRY TECH STACK"
@@ -35,18 +73,22 @@ const AboutSection = ({ id = "about" }) => {
             This takes up the middle space. The 'scene' prop handles the interaction.
         */}
                 <div className="h-[400px] md:h-[600px] w-full flex items-center justify-center order-1 md:order-2 relative overflow-visible">
-                    <div className="absolute inset-0 scale-[0.95] origin-center w-[120%] left-1/2 -translate-x-1/2">
-                        <Spline
-                            className="w-full h-full bg-transparent"
-                            scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
-                        />
-                    </div>
+                    <SplineErrorBoundary fallback={<SplineErrorFallback />}>
+                        <Suspense fallback={<SplineLoadingFallback />}>
+                            <div className="absolute inset-0 scale-[0.95] origin-center w-[120%] left-1/2 -translate-x-1/2">
+                                <Spline
+                                    className="w-full h-full bg-transparent"
+                                    scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
+                                />
+                            </div>
+                        </Suspense>
+                    </SplineErrorBoundary>
                     {/* Overlay to hide any remaining watermark in bottom-right corner */}
                     <div className="absolute bottom-8 -right-8 w-48 h-12 bg-black z-20 pointer-events-none" />
                 </div>
 
                 {/* Right Column Stats */}
-                <div className="flex flex-col gap-20 md:gap-40 items-center md:items-start text-center md:text-left px-6 order-3 md:order-3">
+                <div className="flex flex-col gap-20 md:gap-40 items-center md:items-start text-center md:text-left px-6 order-3 md:order-3 stat-container">
                     <StatBlock
                         number="2024"
                         label="THIS COMPANY IS FOUNDED"

@@ -68,14 +68,20 @@ const PhoneNumberInput = ({ formData, setFormData, error }) => {
     const [country, setCountry] = useState("in");
 
     useEffect(() => {
-        fetch("https://ipinfo.io/json?token=YOUR_TOKEN_HERE")
-            .then(res => res.json())
-            .then(data => {
-                if (data?.country) {
-                    setCountry(data.country.toLowerCase());
-                }
-            })
-            .catch(() => setCountry("us"));
+        // Try to detect country from IP (optional - falls back to default)
+        // Note: This requires a valid ipinfo.io token. For now, using default.
+        // Uncomment and add your token if you want to use this feature:
+        // fetch("https://ipinfo.io/json?token=YOUR_TOKEN_HERE")
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         if (data?.country) {
+        //             setCountry(data.country.toLowerCase());
+        //         }
+        //     })
+        //     .catch(() => setCountry("in"));
+        
+        // Default to India for now
+        setCountry("in");
     }, []);
 
     return (
@@ -357,7 +363,6 @@ const ContactFooterSection = ({ id }) => {
                                 <input
                                     type="email"
                                     name="email"
-                                    strict={true}
                                     placeholder="Email Address *"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -421,7 +426,7 @@ const ContactFooterSection = ({ id }) => {
 
                 {/* Column 1: Logo & Socials */}
                 <div className="space-y-6">
-                    <div className="flex items-center gap-2">
+                    <div className="flex justify-center items-center gap-2">
                         <img src="/logo-w.png" alt="CodeYourIdea" className="h-10 w-auto object-contain" />
                     </div>
                     <div className="text-sm leading-relaxed">
@@ -430,7 +435,7 @@ const ContactFooterSection = ({ id }) => {
                     </div>
 
                     {/* Social Icons */}
-                    <div className="flex gap-3 pt-4">
+                    <div className="flex justify-center gap-3 pt-4">
                         <SocialIcon Icon={FaLinkedin} href="https://www.linkedin.com/company/codeyouridea" track="linkedin" />
                         <SocialIcon Icon={FaFacebook} href="https://www.facebook.com/codeyourideapage/" track="facebook" />
                         <SocialIcon Icon={FaInstagram} href="https://www.instagram.com/codeyouridea_" track="instagram" />

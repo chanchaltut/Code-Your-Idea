@@ -25,9 +25,14 @@ const PricingCard = ({ title, subtitle, price, description }) => (
         </div>
 
         {/* Button */}
-        <button className="w-full bg-white text-black font-bold py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 transform active:scale-95">
+        <a
+            href="https://wa.me/916370510539"
+            target="_blank"
+            rel="noreferrer"
+            className="w-full bg-white text-black font-bold py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 transform active:scale-95 text-center block"
+        >
             Let's Discuss
-        </button>
+        </a>
     </div>
 );
 
