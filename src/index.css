@@ -82,7 +82,7 @@ body {
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #976ecc #fcdcb1;
+  scrollbar-color: #976ecc #e4e2e0;
 }
 
 /* Line clamp utility for text truncation */
@@ -331,7 +331,7 @@ select {
 @media (prefers-color-scheme: light) {
   :root {
     color: var(--color-text-primary);
-    background-color: var(--color-bg-primary);
+    /* background-color: var(--color-bg-primary); */
   }
 }
 
@@ -474,89 +474,6 @@ select {
     gap: clamp(3rem, 8vw, 6rem) !important;
   }
 }
-
-@media (max-width: 999px) {
-  #about {
-    padding-top: 3rem !important;
-    padding-bottom: 3rem !important;
-    min-height: auto !important;
-  }
-
-  #about>div.relative.z-10 {
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-  }
-
-  #about>div>div>div[class*="h-"] {
-    height: clamp(250px, 50vw, 400px) !important;
-    order: 1 !important;
-  }
-
-  #about>div>div>div.flex.flex-col {
-    gap: 2rem !important;
-    order: 2 !important;
-  }
-
-  #about h3 {
-    font-size: clamp(2rem, 8vw, 3.5rem) !important;
-  }
-
-  #about h2 {
-    font-size: clamp(1.25rem, 5vw, 2.5rem) !important;
-  }
-
-  #about>div.relative.z-10.max-w-4xl {
-    margin-top: 2rem !important;
-  }
-}
-
-@media (max-width: 639px) {
-  #about>div>div>div[class*="h-"] {
-    height: clamp(200px, 60vw, 300px) !important;
-  }
-
-  #about h3 {
-    font-size: clamp(1.75rem, 10vw, 2.5rem) !important;
-  }
-
-  #about h2 {
-    font-size: clamp(1rem, 6vw, 1.75rem) !important;
-  }
-
-  #about [class*="px-"] {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-  }
-}
-
-@media (max-width: 479px) {
-  #about>div>div>div[class*="h-"] {
-    height: clamp(180px, 70vw, 250px) !important;
-  }
-
-  #about h3 {
-    font-size: clamp(1.5rem, 12vw, 2rem) !important;
-  }
-
-  #about>div>div>div.flex.flex-col {
-    gap: 1.5rem !important;
-  }
-}
-
-@media (max-width: 359px) {
-  #about>div>div>div[class*="h-"] {
-    height: 160px !important;
-  }
-
-  #about h3 {
-    font-size: 1.5rem !important;
-  }
-
-  #about h2 {
-    font-size: 0.875rem !important;
-  }
-}
-
 /* ========== PORTFOLIO SECTION ========== */
 @media (max-width: 1399px) {
   #portfolio {
