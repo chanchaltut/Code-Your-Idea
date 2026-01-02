@@ -155,6 +155,7 @@ const PhoneNumberInput = ({ formData, setFormData, error }) => {
                     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5) !important;
                     max-width: 220px !important; /* Cap width for larger screens if needed */
                     max-height: 240px !important;
+                    text-align: left !important;
                 }
                 
                 /* List Items */
@@ -251,15 +252,11 @@ const ContactFooterSection = ({ id }) => {
 
     const validateForm = () => {
         const newErrors = {};
-
-        // Strict Regex: Requires TLD, no special chars, min 2 char domain suffix
-        const strictEmailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
         if (!formData.name.trim()) newErrors.name = "Name is required";
         if (!formData.email.trim()) {
-            newErrors.email = "Email required";
-        } else if (!strictEmailRegex.test(formData.email)) {
-            newErrors.email = "Please enter a valid business email (e.g., name@company.com)";
+            newErrors.email = "Email is required";
+        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+            newErrors.email = "Email is invalid";
         }
         if (formData.phone && formData.phone.length < 5) {
             newErrors.phone = "Please enter a valid phone number";
@@ -360,6 +357,7 @@ const ContactFooterSection = ({ id }) => {
                                 <input
                                     type="email"
                                     name="email"
+                                    strict={true}
                                     placeholder="Email Address *"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -446,12 +444,12 @@ const ContactFooterSection = ({ id }) => {
                     <h4 className="text-white font-bold mb-2 text-sm">Contact</h4>
                     <div className="text-white/60 text-sm font-sans font-semibold">
                         <a href="mailto:contact@codeyouridea.com" onClick={() => analytics.trackContactClick('email')} className="text-white/60 hover:text-white transition-colors">
-                            contact@codeyouridea.com
+                            Email Address
                         </a>
                     </div>
                     <div className="text-white/60 text-sm font-sans font-semibold">
                         <a href="tel:+916370510539" onClick={() => analytics.trackContactClick('phone')} className="text-white/60 hover:text-white transition-colors">
-                            +91 6370510539
+                            Phone Number
                         </a>
                     </div>
                     <a href="https://wa.me/916370510539" onClick={() => analytics.trackContactClick('whatsapp')} className="text-white/60 hover:text-white transition-colors text-sm font-sans font-semibold">
@@ -470,6 +468,7 @@ const ContactFooterSection = ({ id }) => {
                 {/* Column 4: More */}
                 <div className="lg:col-span-1 flex flex-col gap-4">
                     <h4 className="text-white font-bold mb-2 text-sm">Legal</h4>
+                    <FooterLink href="#">Site Map</FooterLink>
                     <FooterLink href="#">Privacy Policy</FooterLink>
                     <FooterLink href="#">Terms of Service</FooterLink>
                 </div>
