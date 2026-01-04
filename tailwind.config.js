@@ -7,11 +7,12 @@ export default {
   theme: {
     extend: {
       screens: {
-        'xs': '475px',
-        'tablet': '768px',
-        'nav': '1000px',
-        'laptop': '1024px',
-      },
+        'xs': '475px',              // min-width
+        'tablet': '768px',          // min-width
+        'nav': '1000px',            // min-width (≥1000px)
+        'nav-max': { max: '1150px' } // max-width (≤999px)
+      }
+      ,
       height: {
         'screen-safe': 'calc(var(--vh, 1vh) * 100)',
       },

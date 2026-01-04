@@ -44,7 +44,7 @@ const AboutSection = ({ id = "about" }) => {
             </div>
 
             {/* 2. Main Grid Layout - Forced 3 columns everywhere */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-3 items-center px-2 md:px-0">
+            <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-3 nav-max:grid-cols-2 items-center px-2 md:px-0">
 
                 {/* Left Column Stats */}
                 <div className="flex flex-col gap-8 md:gap-40 items-end text-right px-20">
@@ -59,7 +59,7 @@ const AboutSection = ({ id = "about" }) => {
                 </div>
 
                 {/* Center Column: The Spline Robot */}
-                <div className="h-[180px] sm:h-[300px] md:h-[600px] w-full flex items-center justify-center relative overflow-visible">
+                <div className="h-[180px] sm:h-[300px] md:h-[600px] w-full flex items-center justify-center relative overflow-visible nav-max:hidden flex">
                     <SplineErrorBoundary fallback={<SplineErrorFallback />}>
                         <Suspense fallback={<SplineLoadingFallback />}>
                             {/* Scaled container logic:
