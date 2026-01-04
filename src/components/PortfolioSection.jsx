@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from "framer-motion";
-import { ArrowRight, Wind, Zap, BookOpen, ChevronRight, GraduationCap, Home, Trees, Layout } from 'lucide-react';
+import { ArrowRight, Wind, Zap, BookOpen, ChevronRight, GraduationCap, Home, Trees, Layout, Sparkles } from 'lucide-react';
+import SplineErrorBoundary from './SplineErrorBoundary';
 import analytics from "../utils/analytics";
 import jeoBanner from "../assets/images/portfolio/Jeo-bg.avif";
 
@@ -149,32 +150,38 @@ const PortfolioSection = () => {
                     </div>
                 </motion.div>
 
-                {/* 5. Bottom Center - Swagat Odisha (The Management LMS) */}
-                <motion.div
+                {/* 5. Bottom Center - Prompty (AI Prompt Generator App) */}
+                <motion.div 
                     whileHover={{ scale: 1.02 }}
-                    onClick={() => handleProjectClick("Swagat Odisha", "https://www.swagatodisha.com")}
+                    onClick={() => handleProjectClick("Prompty", "https://play.google.com/store/apps/details?id=com.prompty.app")}
                     className="md:col-span-4 relative overflow-hidden rounded-[2rem] bg-white text-black p-2 flex flex-col items-center justify-center cursor-pointer"
                 >
+                    {/* Header */}
                     <div className="w-full flex justify-between px-4 py-2 absolute top-0 text-[10px] font-bold text-gray-400 uppercase tracking-wide">
-                        <span>FULLSTACK LMS</span>
-                        <div className="flex gap-2 text-indigo-500">
-                            <Layout size={12} />
-                            <span>Admin Portal</span>
+                        <span>AI TOOL</span>
+                        <div className="flex gap-2 text-purple-600">
+                            <Sparkles size={12} />
+                            <span>Mobile App</span>
                         </div>
                     </div>
 
+                    {/* Content */}
                     <div className="text-center mt-4">
-                        <span className="text-indigo-600 text-[10px] font-black uppercase mb-2 block tracking-tighter">School Admission Management</span>
-                        <h2 className="text-4xl font-bold tracking-tighter mb-4 text-black">Swagat Odisha</h2>
+                        <span className="text-purple-600 text-[10px] font-black uppercase mb-2 block tracking-tighter">
+                            Trendy Image Prompts
+                        </span>
+                        <h2 className="text-4xl font-bold tracking-tighter mb-4 text-black">Prompty</h2>
                         <p className="text-[10px] text-gray-500 max-w-[200px] mx-auto mb-6 leading-tight">
-                            Streamlining school data with speed, precision, and top-tier security.
+                            Unlock your creativity with ready-to-use, trending prompts for any AI image generator.
                         </p>
-                        <button className="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold shadow-lg">
-                            Visit Website
+                        <button className="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold shadow-lg flex items-center gap-2 mx-auto hover:bg-neutral-800 transition-colors">
+                            Get on Play Store
                         </button>
                     </div>
 
-                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-indigo-200 rounded-full blur-[80px] opacity-40 pointer-events-none"></div>
+                    {/* Background Glow - Adjusted to Purple/Pink for "Creative AI" vibe */}
+                    <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-200 rounded-full blur-[80px] opacity-50 pointer-events-none"></div>
+                    <div className="absolute -top-20 -left-20 w-64 h-64 bg-pink-200 rounded-full blur-[80px] opacity-40 pointer-events-none"></div>
                 </motion.div>
             </div>
 
