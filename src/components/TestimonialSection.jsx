@@ -64,17 +64,19 @@ const TestimonialSection = () => {
                         </div>
                     </div>
 
-                    {/* Card 3: R.K. Mathur (Lemon Style) */}
+                    {/* Card 3: R.K. Dewangan (Lemon Style) */}
                     <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-500 font-bold">W</div>
+                            <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
+                                    <span className="text-gray-400">👤</span>
+                                </div>
                                 <div>
-                                    <h4 className="font-bold text-sm">R.K. Mathur</h4>
+                                    <h4 className="font-bold text-sm">R.K. Dewangan</h4>
                                     <p className="text-xs text-gray-400">December 21, 2024</p>
                                 </div>
                             </div>
-                            <span className="text-yellow-400 text-xl">☁</span>
+                            <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">R</div>
                         </div>
                         <div className="flex gap-1 mb-3">
                             {[1, 2, 3, 4].map(i => <span key={i} className="text-xl">🍋</span>)}
@@ -88,6 +90,69 @@ const TestimonialSection = () => {
 
                 {/* --- COLUMN 2 --- */}
                 <div className="flex flex-col gap-6">
+                    {/* Card 4: Ashish Kumar Gupta (Uber Style) */}
+                    <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
+                                    <span className="text-gray-400">👤</span>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm">Ashish Kumar Gupta</h4>
+                                    <p className="text-xs text-gray-400">November 22, 2025</p>
+                                </div>
+                            </div>
+                            <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">A</div>
+                        </div>
+                        <div className="flex gap-1 mb-3 text-yellow-400">
+                            {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
+                        </div>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                            The main thing i liked about this Code Your Idea team is their transparency and their ability to deliver on time. They are very professional and they are always there to help you with your questions. It feels like working with a friend.
+                        </p>
+                    </div>
+
+
+                    {/* Card 5: Video Testimonial 1 - Ankitarani Deep */}
+                    <YouTubeVideoCard
+                        name="Ankitarani Deep"
+                        date="October 05, 2025"
+                        videoId="lINmr0gjcu0"
+                        thumbnail={ankitaBanner}
+                    />
+
+                    {/* Card 6: Audio Player 1 */}
+                    <AudioCard date="August 18, 2025" />
+                </div>
+
+                {/* --- COLUMN 3 --- */}
+                <div className="flex flex-col gap-6">
+                    {/* Card 7: Audio Player 2 */}
+                    <AudioCard date="June 23, 2025" />
+
+                    {/* Card 8: Sekhar Panigrahi (Uber Style) */}
+                    <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
+                                    <span className="text-gray-400">👤</span>
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-sm">Sekhar Panigrahi</h4>
+                                    <p className="text-xs text-gray-400">January 12, 2025</p>
+                                </div>
+                            </div>
+                            <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">S</div>
+                        </div>
+                        <div className="flex gap-1 mb-3 text-yellow-400">
+                            {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
+                        </div>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                            I manage a startup with a very tight budget, so I was nervous about costs. These guys were transparent, and still delivered an app that looked way more premium than I expected :)
+                        </p>
+                    </div>
+
+
                     {/* Card 4: Mr. Alok Ranjan Rathi (Trails of Teak) - Trustpilot Style with owner & brand */}
                     <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
                         <div className="flex justify-between items-start mb-4">
@@ -121,51 +186,6 @@ const TestimonialSection = () => {
                         </p>
                     </div>
 
-                    {/* Card 5: Video Testimonial 1 - Ankitarani Deep */}
-                    <YouTubeVideoCard
-                        name="Ankitarani Deep"
-                        date="October 05, 2025"
-                        videoId="lINmr0gjcu0"
-                        thumbnail={ankitaBanner}
-                    />
-
-                    {/* Card 6: Audio Player 1 */}
-                    <AudioCard date="August 18, 2025" />
-                </div>
-
-                {/* --- COLUMN 3 --- */}
-                <div className="flex flex-col gap-6">
-                    {/* Card 7: Audio Player 2 */}
-                    <AudioCard date="June 23, 2025" />
-
-                    {/* Card 8: Tobi Smith (Uber Style) */}
-                    <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
-                        <div className="flex justify-between items-start mb-4">
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
-                                    <span className="text-gray-400">👤</span>
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-sm">Tobi Smith</h4>
-                                    <p className="text-xs text-gray-400">January 12, 2025</p>
-                                </div>
-                            </div>
-                            <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">U</div>
-                        </div>
-                        <div className="flex gap-1 mb-3 text-yellow-400">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
-                        </div>
-                        <p className="text-gray-600 text-sm leading-relaxed">
-                            I manage a startup with a very tight budget, so I was nervous about costs. These guys were transparent, and still delivered an app that looked way more premium than I expected :)
-                        </p>
-                    </div>
-
-                    {/* Card 9: Video Testimonial 2 */}
-                    <VideoCard
-                        name="Hemal Kalariya"
-                        date="September 12, 2024"
-                        image="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&auto=format&fit=crop&q=80"
-                    />
                 </div>
 
             </div>
