@@ -68,7 +68,7 @@ const TestimonialSection = () => {
                     <div className="bg-white rounded-[1.5rem] p-6 text-black shadow-lg hover:-translate-y-1 transition-transform duration-300">
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
+                                <div className="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
                                     <span className="text-gray-400">👤</span>
                                 </div>
                                 <div>
@@ -78,8 +78,8 @@ const TestimonialSection = () => {
                             </div>
                             <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">R</div>
                         </div>
-                        <div className="flex gap-1 mb-3">
-                            {[1, 2, 3, 4].map(i => <span key={i} className="text-xl">🍋</span>)}
+                        <div className="flex gap-1 mb-3 text-yellow-400">
+                            {[1, 2, 3, 4].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
                         </div>
                         <h4 className="font-bold text-sm mb-2">Amazing feed tool</h4>
                         <p className="text-gray-600 text-sm leading-relaxed">
@@ -104,8 +104,12 @@ const TestimonialSection = () => {
                             </div>
                             <div className="bg-black text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold">A</div>
                         </div>
-                        <div className="flex gap-1 mb-3 text-yellow-400">
-                            {[1, 2, 3, 4, 5].map(i => <Star key={i} className="w-4 h-4 fill-current" />)}
+                        <div className="flex gap-1 mb-3">
+                            {[1, 2, 3, 4, 5].map(i => (
+                                <div key={i} className="bg-[#00b67a] p-1 rounded-sm">
+                                    <Star className="w-3 h-3 text-white fill-white" />
+                                </div>
+                            ))}
                         </div>
                         <p className="text-gray-600 text-sm leading-relaxed">
                             The main thing i liked about this Code Your Idea team is their transparency and their ability to deliver on time. They are very professional and they are always there to help you with your questions. It feels like working with a friend.
