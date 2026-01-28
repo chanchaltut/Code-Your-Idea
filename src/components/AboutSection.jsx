@@ -72,7 +72,10 @@ const AboutSection = ({ id = "about" }) => {
                         </Suspense>
                     </SplineErrorBoundary>
 
+                    {/* Watermark Cover */}
+                    <div className="absolute bottom-2 right-2 md:bottom-4 md:-right-8 w-20 h-6 md:w-48 md:h-12 bg-black z-20 pointer-events-none" />
                 </div>
+
 
                 {/* Right Column Stats */}
                 <div className="flex flex-col gap-8 md:gap-40 items-start text-left px-20">
