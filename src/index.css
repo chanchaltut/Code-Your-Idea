@@ -435,11 +435,6 @@ select {
     padding-bottom: 4rem !important;
   }
 
-  /* 3D Spline container */
-  #about>div>div>div[class*="h-"] {
-    height: clamp(300px, 35vw, 550px) !important;
-  }
-
   /* Background ghost text */
   #about h2 {
     font-size: clamp(1.5rem, 4vw, 3.5rem) !important;

@@ -62,23 +62,16 @@ const AboutSection = ({ id = "about" }) => {
                 <div className="h-[180px] sm:h-[300px] md:h-[600px] w-full flex items-center justify-center relative overflow-visible nav-max:hidden flex">
                     <SplineErrorBoundary fallback={<SplineErrorFallback />}>
                         <Suspense fallback={<SplineLoadingFallback />}>
-                            {/* Scaled container logic:
-                                - scale-[0.6] on mobile to fit the tight column
-                                - scale-110 on desktop for impact
-                            */}
+
                             <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-                                <div className="w-[100%] h-[100%] md:w-full md:h-full transform scale-[0.5] sm:scale-65 md:scale-95 origin-center">
-                                    <Spline
-                                        className="w-full h-full bg-transparent"
-                                        scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
-                                    />
-                                </div>
+                                <Spline
+                                    className="w-[80%] h-full bg-transparent"
+                                    scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
+                                />
                             </div>
                         </Suspense>
                     </SplineErrorBoundary>
 
-                    {/* Watermark Cover */}
-                    <div className="absolute bottom-2 right-2 md:bottom-8 md:-right-8 w-20 h-6 md:w-48 md:h-12 bg-black z-20 pointer-events-none" />
                 </div>
 
                 {/* Right Column Stats */}
