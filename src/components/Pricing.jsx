@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PricingCard = ({ title, subtitle, price, description }) => (
+const PricingCard = ({ title, subtitle, price, description, isCustom }) => (
     <div className="group bg-[#0d0d2b]/60 backdrop-blur-md border border-white/10 rounded-[2rem] p-8 flex flex-col h-full hover:border-white/30 transition-all duration-500">
         {/* Card Header */}
         <div className="mb-6">
@@ -13,8 +13,17 @@ const PricingCard = ({ title, subtitle, price, description }) => (
 
         {/* Pricing */}
         <div className="mb-8 flex items-baseline">
-            <span className="text-[2.5rem] font-bold tracking-tight">${price}</span>
-            <span className="text-gray-400 text-sm ml-1.5 font-light">/One time</span>
+            {isCustom ? (
+                <>
+                    <span className="text-[2.5rem] font-bold tracking-tight">Custom</span>
+                    <span className="text-gray-400 text-sm ml-1.5 font-light">Pricing</span>
+                </>
+            ) : (
+                <>
+                    <span className="text-[2.5rem] font-bold tracking-tight">${price}</span>
+                    <span className="text-gray-400 text-sm ml-1.5 font-light">/One time</span>
+                </>
+            )}
         </div>
 
         {/* Features/Description */}
@@ -39,43 +48,49 @@ const PricingCard = ({ title, subtitle, price, description }) => (
 const PricingSection = () => {
     const websitePlans = [
         {
-            title: "Basic",
-            subtitle: "Great for MVPs launches.",
+            title: "Starter",
+            subtitle: "Your MVP, Simplified.",
             price: "499",
-            description: "Clean, responsive 1-3 page site with SEO setup and contact form. Includes Google Analytics for tracking and 30-day support.",
+            description: "Professional design. SEO-ready. Contact forms. Mobile-responsive. Analytics integration. Everything you need to launch. 30-day support included.",
+            isCustom: false,
         },
         {
-            title: "Standard",
-            subtitle: "Ideal for service companies.",
-            price: "899",
-            description: "advanced SEO, animations/parallax and add-on admin/payment/chat options. Responsive design, analytics and 60-day support.",
+            title: "Pro",
+            subtitle: "Built to Impress.",
+            price: "999",
+            description: "Advanced SEO. Smooth animations and parallax effects. Optional payment gateways, live chat, and admin dashboards. Fully responsive with analytics. 30-day support included.",
+            isCustom: false,
         },
         {
-            title: "Premium",
-            subtitle: "Perfect for e-commerce & SaaS",
-            price: "1399",
-            description: "Full-featured advanced website with admin panel, payment gateway, AI chatbot, WhatsApp & Maps. Premium SEO, animations, analytics and 90-day support.",
+            title: "Enterprise",
+            subtitle: "Fully Customized.",
+            price: null,
+            description: "Unlimited features and pages. Tailored to your exact business needs. Perfect for complex integrations and scaling operations. 30-day support included.",
+            isCustom: true,
         },
     ];
 
     const appPlans = [
         {
-            title: "Basic",
-            subtitle: "Great for MVPs launches.",
+            title: "Starter",
+            subtitle: "Launch Fast.",
             price: "1499",
-            description: "Simple 3-screen app with basic UI and analytics. Optional login and push notifications, plus 30-day support.",
+            description: "Clean 3-5 screen app. Standard UI with analytics. Optional login and push notifications. Everything you need to validate your idea. 30-day support included.",
+            isCustom: false,
         },
         {
-            title: "Standard",
-            subtitle: "Ideal for businesses or startups.",
+            title: "Pro",
+            subtitle: "Ready for Growth.",
             price: "2499",
-            description: "6-screen medium app with login system, analytics and optional admin/payment integrations. Push notifications included with 60-day support.",
+            description: "6-10 screen app with secure authentication. Real-time analytics. Optional payment processing and admin panels. Push notifications standard. 30-day support included.",
+            isCustom: false,
         },
         {
-            title: "Premium",
-            subtitle: "Perfect for e-commerce & SaaS.",
-            price: "3999",
-            description: "Advanced 12+ screen app with custom UI/UX, full database/API, admin panel and payment gateway. Comes with analytics, notifications and 90-day support.",
+            title: "Enterprise",
+            subtitle: "Built to Scale.",
+            price: null,
+            description: "Unlimited screens, features, and integrations. Custom-engineered for your business model with enterprise-grade infrastructure. 30-day support included.",
+            isCustom: true,
         },
     ];
 
@@ -101,7 +116,7 @@ const PricingSection = () => {
                     <h2 className="text-4xl text-white font-bold mb-10 pl-2">Website</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {websitePlans.map((plan, i) => (
-                            <PricingCard key={i} {...plan} />
+                            <PricingCard key={i} {...plan} isCustom={plan.isCustom} />
                         ))}
                     </div>
                 </section>
@@ -111,7 +126,7 @@ const PricingSection = () => {
                     <h2 className="text-4xl text-white font-bold mb-10 pl-2">App</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {appPlans.map((plan, i) => (
-                            <PricingCard key={i} {...plan} />
+                            <PricingCard key={i} {...plan} isCustom={plan.isCustom} />
                         ))}
                     </div>
                 </section>

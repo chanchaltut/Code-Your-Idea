@@ -113,7 +113,7 @@ const EMAIL_CONFIG = {
 
 - ✅ **200 emails/month** - FREE
 - ✅ **Unlimited templates**
-- ✅ **Basic email services**
+- ✅ **standard email services**
 - ✅ **No credit card required**
 
 For higher volumes, EmailJS offers paid plans starting at $15/month for 1000 emails.

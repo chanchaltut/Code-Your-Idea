@@ -61,7 +61,7 @@ const BlogPage = () => {
                         <div className="bg-gradient-to-r from-futuristic-cyan-500/10 to-futuristic-blue-500/10 rounded-2xl p-6 border border-futuristic-cyan-500/20 mb-8">
                             <h3 className="text-2xl font-bold text-white mb-4">💰 Quick Cost Summary</h3>
                             <ul className="text-white/80 space-y-2">
-                                <li><strong>Basic Business Website:</strong> $3,000 - $8,000</li>
+                                <li><strong>standard Business Website:</strong> $3,000 - $8,000</li>
                                 <li><strong>E-commerce Website:</strong> $8,000 - $25,000</li>
                                 <li><strong>Custom Web Application:</strong> $15,000 - $100,000+</li>
                                 <li><strong>Enterprise Solution:</strong> $50,000 - $500,000+</li>
