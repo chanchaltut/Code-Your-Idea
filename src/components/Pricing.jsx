@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation } from '../utils/useLocation';
 
-const PricingCard = ({ title, subtitle, price, description, isCustom }) => (
+const PricingCard = ({ title, subtitle, price, description, isCustom, currency = '$' }) => (
     <div className="group bg-[#0d0d2b]/60 backdrop-blur-md border border-white/10 rounded-[2rem] p-8 flex flex-col h-full hover:border-white/30 transition-all duration-500">
         {/* Card Header */}
         <div className="mb-6">
@@ -20,7 +21,7 @@ const PricingCard = ({ title, subtitle, price, description, isCustom }) => (
                 </>
             ) : (
                 <>
-                    <span className="text-[2.5rem] font-bold tracking-tight">${price}</span>
+                    <span className="text-[2.5rem] font-bold tracking-tight">{currency}{price}</span>
                     <span className="text-gray-400 text-sm ml-1.5 font-light">/One time</span>
                 </>
             )}
@@ -46,18 +47,74 @@ const PricingCard = ({ title, subtitle, price, description, isCustom }) => (
 );
 
 const PricingSection = () => {
+    const { isIndia, isLoading } = useLocation();
+
+    // Manual override for testing (add ?forceIndia=true or ?forceUSD=true to URL)
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceIndia = urlParams.get('forceIndia') === 'true';
+    const forceUSD = urlParams.get('forceUSD') === 'true';
+    
+    // Use manual override if provided, otherwise use detected location
+    const finalIsIndia = forceIndia ? true : forceUSD ? false : isIndia;
+
+    // Debug logging
+    useEffect(() => {
+        if (!isLoading) {
+            console.log('💰 Pricing Configuration:', {
+                detectedLocation: isIndia ? 'India' : 'International',
+                manualOverride: forceIndia ? 'India (forced)' : forceUSD ? 'USD (forced)' : 'None',
+                finalPricing: finalIsIndia ? 'INR (₹)' : 'USD ($)',
+                websiteStarter: finalIsIndia ? '₹10,000' : '$499',
+                websitePro: finalIsIndia ? '₹20,000' : '$999',
+                appStarter: finalIsIndia ? '₹20,000' : '$1,499',
+                appPro: finalIsIndia ? '₹30,000' : '$2,499'
+            });
+        }
+    }, [isIndia, isLoading, finalIsIndia, forceIndia, forceUSD]);
+
+    // Pricing configuration based on location
+    const getPricing = () => {
+        if (finalIsIndia) {
+            return {
+                currency: '₹',
+                website: {
+                    starter: '10,000',
+                    pro: '20,000',
+                },
+                app: {
+                    starter: '20,000',
+                    pro: '30,000',
+                },
+            };
+        } else {
+            return {
+                currency: '$',
+                website: {
+                    starter: '499',
+                    pro: '999',
+                },
+                app: {
+                    starter: '1499',
+                    pro: '2499',
+                },
+            };
+        }
+    };
+
+    const pricing = getPricing();
+
     const websitePlans = [
         {
             title: "Starter",
             subtitle: "Your MVP, Simplified.",
-            price: "499",
+            price: pricing.website.starter,
             description: "Professional design. SEO-ready. Contact forms. Mobile-responsive. Analytics integration. Everything you need to launch. 30-day support included.",
             isCustom: false,
         },
         {
             title: "Pro",
             subtitle: "Built to Impress.",
-            price: "999",
+            price: pricing.website.pro,
             description: "Advanced SEO. Smooth animations and parallax effects. Optional payment gateways, live chat, and admin dashboards. Fully responsive with analytics. 30-day support included.",
             isCustom: false,
         },
@@ -74,14 +131,14 @@ const PricingSection = () => {
         {
             title: "Starter",
             subtitle: "Launch Fast.",
-            price: "1499",
+            price: pricing.app.starter,
             description: "Clean 3-5 screen app. Standard UI with analytics. Optional login and push notifications. Everything you need to validate your idea. 30-day support included.",
             isCustom: false,
         },
         {
             title: "Pro",
             subtitle: "Ready for Growth.",
-            price: "2499",
+            price: pricing.app.pro,
             description: "6-10 screen app with secure authentication. Real-time analytics. Optional payment processing and admin panels. Push notifications standard. 30-day support included.",
             isCustom: false,
         },
@@ -114,21 +171,33 @@ const PricingSection = () => {
                 {/* Website Category */}
                 <section className="mb-24">
                     <h2 className="text-4xl text-white font-bold mb-10 pl-2">Website</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {websitePlans.map((plan, i) => (
-                            <PricingCard key={i} {...plan} isCustom={plan.isCustom} />
-                        ))}
-                    </div>
+                    {isLoading ? (
+                        <div className="text-center text-gray-400 py-12">
+                            Loading pricing...
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {websitePlans.map((plan, i) => (
+                                <PricingCard key={i} {...plan} isCustom={plan.isCustom} currency={pricing.currency} />
+                            ))}
+                        </div>
+                    )}
                 </section>
 
                 {/* App Category */}
                 <section className="mb-20">
                     <h2 className="text-4xl text-white font-bold mb-10 pl-2">App</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {appPlans.map((plan, i) => (
-                            <PricingCard key={i} {...plan} isCustom={plan.isCustom} />
-                        ))}
-                    </div>
+                    {isLoading ? (
+                        <div className="text-center text-gray-400 py-12">
+                            Loading pricing...
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {appPlans.map((plan, i) => (
+                                <PricingCard key={i} {...plan} isCustom={plan.isCustom} currency={pricing.currency} />
+                            ))}
+                        </div>
+                    )}
                 </section>
             </div>
         </div>
