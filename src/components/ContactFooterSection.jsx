@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { Link } from "react-router-dom";
 import { FaLinkedin, FaFacebook, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 import { SiX } from "react-icons/si";
 import { handleContactSubmission, showWarningModal } from "../utils/modalUtils";
@@ -79,7 +80,7 @@ const PhoneNumberInput = ({ formData, setFormData, error }) => {
         //         }
         //     })
         //     .catch(() => setCountry("in"));
-        
+
         // Default to India for now
         setCountry("in");
     }, []);
@@ -473,9 +474,9 @@ const ContactFooterSection = ({ id }) => {
                 {/* Column 4: More */}
                 <div className="lg:col-span-1 flex flex-col gap-4">
                     <h4 className="text-white font-bold mb-2 text-sm">Legal</h4>
-                    <FooterLink href="#">Site Map</FooterLink>
-                    <FooterLink href="#">Privacy Policy</FooterLink>
-                    <FooterLink href="#">Terms of Service</FooterLink>
+                    <FooterLink href="/sitemap">Site Map</FooterLink>
+                    <FooterLink href="/privacy-policy">Privacy Policy</FooterLink>
+                    <FooterLink href="/terms-of-service">Terms of Service</FooterLink>
                 </div>
             </div>
 
@@ -504,14 +505,31 @@ const SocialIcon = ({ Icon, href, track }) => (
     </a>
 );
 
-const FooterLink = ({ children, href, onClick, className = "" }) => (
-    <a
-        href={href}
-        onClick={onClick}
-        className={`text-white/60 hover:text-white transition-colors text-sm font-medium block font-sans ${className}`}
-    >
-        {children}
-    </a>
-);
+const FooterLink = ({ children, href, onClick, className = "" }) => {
+    // Use Link for internal routes, anchor for external/hash links
+    const isInternalRoute = href && href.startsWith('/') && !href.startsWith('#');
+
+    if (isInternalRoute) {
+        return (
+            <Link
+                to={href}
+                onClick={onClick}
+                className={`text-white/60 hover:text-white transition-colors text-sm font-medium block font-sans ${className}`}
+            >
+                {children}
+            </Link>
+        );
+    }
+
+    return (
+        <a
+            href={href}
+            onClick={onClick}
+            className={`text-white/60 hover:text-white transition-colors text-sm font-medium block font-sans ${className}`}
+        >
+            {children}
+        </a>
+    );
+};
 
 export default ContactFooterSection;
