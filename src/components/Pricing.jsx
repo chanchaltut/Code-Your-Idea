@@ -64,10 +64,10 @@ const PricingSection = () => {
                 detectedLocation: isIndia ? 'India' : 'International',
                 manualOverride: forceIndia ? 'India (forced)' : forceUSD ? 'USD (forced)' : 'None',
                 finalPricing: finalIsIndia ? 'INR (₹)' : 'USD ($)',
-                websiteStarter: finalIsIndia ? '₹10,000' : '$499',
-                websitePro: finalIsIndia ? '₹20,000' : '$999',
-                appStarter: finalIsIndia ? '₹20,000' : '$1,499',
-                appPro: finalIsIndia ? '₹30,000' : '$2,499'
+                websiteStarter: finalIsIndia ? '₹9,999' : '$499',
+                websitePro: finalIsIndia ? '₹24,999' : '$999',
+                appStarter: finalIsIndia ? '₹24,999' : '$1,499',
+                appPro: finalIsIndia ? '₹49,999' : '$2,499'
             });
         }
     }, [isIndia, isLoading, finalIsIndia, forceIndia, forceUSD]);
@@ -78,12 +78,12 @@ const PricingSection = () => {
             return {
                 currency: '₹',
                 website: {
-                    starter: '10,000',
-                    pro: '20,000',
+                    starter: '9,999',
+                    pro: '24,999',
                 },
                 app: {
-                    starter: '20,000',
-                    pro: '30,000',
+                    starter: '24,999',
+                    pro: '49,999',
                 },
             };
         } else {
