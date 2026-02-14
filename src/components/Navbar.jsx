@@ -52,16 +52,17 @@ const Navbar = () => {
 
         if (link.isHash) {
             // Handle hash links (scroll to section)
-            // If we're not on the home page, navigate to home with hash, then scroll
+            // Always navigate to home page first if not already there
             if (location.pathname !== '/') {
-                // Navigate to home page with hash
-                navigate(link.href);
-                // Wait for page to load, then scroll to section
+                // Navigate to home page with hash in URL
+                navigate(`/${link.href}`);
+                // Wait for navigation to complete, then scroll to section
                 setTimeout(() => {
                     scrollToSection(link.href);
                 }, 300);
             } else {
-                // We're already on home page, just scroll
+                // We're already on home page, update URL and scroll
+                window.history.pushState(null, '', link.href);
                 scrollToSection(link.href);
             }
         } else {
