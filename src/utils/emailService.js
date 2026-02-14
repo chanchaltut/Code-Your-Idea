@@ -1,5 +1,3 @@
-import emailjs from '@emailjs/browser';
-
 // Website URL and Section Links
 const WEBSITE_URL = 'https://www.codeyouridea.com'; // Update this with your actual domain
 const SECTION_LINKS = {
@@ -13,17 +11,20 @@ const SECTION_LINKS = {
   stats: `${WEBSITE_URL}/#stats`
 };
 
-// Email Configuration
+// Email Configuration - Resend
+// IMPORTANT: API keys should be stored in environment variables for security
+// In Vite, use VITE_ prefix for client-side environment variables
 const EMAIL_CONFIG = {
-  // Web3Forms Configuration
-  WEB3FORMS_ACCESS_KEY: 'a1f2b2e1-ce12-438f-b7b5-3cf1d3d71ae6', // Get from https://web3forms.com/
-  TO_EMAIL: 'contact@codeyouridea.com',
-  USE_WEB3FORMS: true
+  // Resend Configuration - Uses environment variable (set in Vercel or .env file)
+  RESEND_API_KEY: import.meta.env.VITE_RESEND_API_KEY || '', // Get from https://resend.com/api-keys
+  FROM_EMAIL: import.meta.env.VITE_FROM_EMAIL || 'Code Your Idea <noreply@codeyouridea.com>', // Sender email (must be verified in Resend)
+  TO_EMAIL: import.meta.env.VITE_TO_EMAIL || 'contact@codeyouridea.com',
+  USE_RESEND: true
 };
 
-// Initialize EmailJS only if enabled and configured
-if (EMAIL_CONFIG.EMAILJS_ENABLED && EMAIL_CONFIG.PUBLIC_KEY !== 'your_emailjs_public_key') {
-  emailjs.init(EMAIL_CONFIG.PUBLIC_KEY);
+// Validate that API key is set
+if (!EMAIL_CONFIG.RESEND_API_KEY) {
+  console.warn('⚠️ Resend API key is not set. Please set VITE_RESEND_API_KEY in your environment variables.');
 }
 
 // Enhanced Email Templates with Section Links
@@ -82,7 +83,7 @@ const EMAIL_TEMPLATES = {
       </div>
     </div>
   `,
-  
+
   quoteRequest: (quoteData) => `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
       <div style="background: linear-gradient(135deg, #3F51B5 0%, #5C6BC0 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
@@ -139,7 +140,7 @@ const EMAIL_TEMPLATES = {
       </div>
     </div>
   `,
-  
+
   welcomeEmail: (userData) => `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
       <div style="background: linear-gradient(135deg, #3F51B5 0%, #5C6BC0 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
@@ -186,123 +187,324 @@ const EMAIL_TEMPLATES = {
         </div>
       </div>
     </div>
+  `,
+
+  careerApplication: (formData) => `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+      <div style="background: linear-gradient(135deg, #3F51B5 0%, #5C6BC0 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+        <h1 style="margin: 0; font-size: 28px;">New Job Application</h1>
+        <p style="margin: 10px 0 0 0; opacity: 0.9;">Code Your Idea - Career Opportunity</p>
+      </div>
+      
+      <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <h2 style="color: #333F48; margin-bottom: 20px;">Application Details</h2>
+        
+        <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+          <strong style="color: #1976d2;">Position Applied For:</strong> ${formData.position}
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+          <strong style="color: #3F51B5;">Full Name:</strong> ${formData.name}
+        </div>
+        <div style="margin-bottom: 15px;">
+          <strong style="color: #3F51B5;">Email:</strong> <a href="mailto:${formData.email}" style="color: #3F51B5;">${formData.email}</a>
+        </div>
+        <div style="margin-bottom: 15px;">
+          <strong style="color: #3F51B5;">Phone:</strong> ${formData.phone || 'Not provided'}
+        </div>
+        <div style="margin-bottom: 15px;">
+          <strong style="color: #3F51B5;">Experience:</strong> ${formData.experience}
+        </div>
+        ${formData.linkedin ? `<div style="margin-bottom: 15px;"><strong style="color: #3F51B5;">LinkedIn:</strong> <a href="${formData.linkedin}" target="_blank" style="color: #3F51B5;">${formData.linkedin}</a></div>` : ''}
+        
+        <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e9ecef;">
+          <h3 style="color: #333F48; margin-bottom: 15px;">Cover Letter</h3>
+          <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; white-space: pre-wrap; color: #333; line-height: 1.6;">
+            ${formData.coverLetter}
+          </div>
+        </div>
+        
+        ${formData.resume ? `<div style="margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+          <strong style="color: #856404;">Note:</strong> Resume file "${formData.resume.name || 'attached'}" has been submitted with this application.
+        </div>` : ''}
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef;">
+          <p style="color: #6c757d; margin: 0; font-size: 14px;">
+            This application was submitted through the Code Your Idea careers page.
+          </p>
+        </div>
+      </div>
+    </div>
   `
 };
 
-// Send Contact Form Email using Web3Forms with enhanced template
+// Send Contact Form Email using Resend
 export const sendContactEmail = async (formData) => {
   try {
-    const formDataToSend = new FormData();
-    formDataToSend.append('access_key', EMAIL_CONFIG.WEB3FORMS_ACCESS_KEY);
-    formDataToSend.append('name', formData.name);
-    formDataToSend.append('email', formData.email);
-    formDataToSend.append('phone', formData.phone || 'Not provided');
-    formDataToSend.append('project', formData.project || 'Not specified');
-    formDataToSend.append('message', formData.message);
-    formDataToSend.append('subject', `New Contact from ${formData.name} - Code Your Idea`);
-    formDataToSend.append('to', EMAIL_CONFIG.TO_EMAIL);
-    
-    // Add HTML template
-    formDataToSend.append('html', EMAIL_TEMPLATES.contactForm(formData));
-    
-    const response = await fetch('https://api.web3forms.com/submit', {
+    // Check if API key is configured
+    if (!EMAIL_CONFIG.RESEND_API_KEY) {
+      console.error('Resend API key is not configured');
+      return {
+        success: false,
+        message: 'Email service is not configured. Please contact the administrator.'
+      };
+    }
+
+    const emailData = {
+      from: EMAIL_CONFIG.FROM_EMAIL,
+      to: EMAIL_CONFIG.TO_EMAIL,
+      reply_to: formData.email,
+      subject: `New Contact from ${formData.name} - Code Your Idea`,
+      html: EMAIL_TEMPLATES.contactForm(formData),
+      text: `New Contact Form Submission\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\nProject: ${formData.project || 'Not specified'}\n\nMessage:\n${formData.message}`
+    };
+
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      body: formDataToSend
+      headers: {
+        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
     });
 
     const result = await response.json();
-    
-    if (result.success) {
-      return { 
-        success: true, 
-        message: 'Email sent successfully! We\'ll get back to you within 24 hours.' 
+
+    if (response.ok && result.id) {
+      return {
+        success: true,
+        message: 'Email sent successfully! We\'ll get back to you within 24 hours.'
       };
     } else {
-      throw new Error(result.message || 'Web3Forms submission failed');
+      console.error('Resend API error:', result);
+      throw new Error(result.message || result.error?.message || 'Resend submission failed');
     }
   } catch (error) {
-    console.error('Web3Forms email sending failed:', error);
-    return { 
-      success: false, 
-      message: 'Failed to send message. Please try again later or contact us directly.' 
+    console.error('Resend email sending failed:', error);
+    return {
+      success: false,
+      message: 'Failed to send message. Please try again later or contact us directly.'
     };
   }
 };
 
-// Send Quote Request Email using Web3Forms with enhanced template
+// Send Quote Request Email using Resend
 export const sendQuoteEmail = async (quoteData) => {
   try {
-    const formDataToSend = new FormData();
-    formDataToSend.append('access_key', EMAIL_CONFIG.WEB3FORMS_ACCESS_KEY);
-    formDataToSend.append('name', 'Quote Request');
-    formDataToSend.append('email', quoteData.email);
-    formDataToSend.append('project_type', quoteData.projectType);
-    formDataToSend.append('budget', quoteData.budget);
-    formDataToSend.append('timeline', quoteData.timeline);
-    formDataToSend.append('description', quoteData.description);
-    formDataToSend.append('subject', `Quote Request - ${quoteData.projectType} - Code Your Idea`);
-    formDataToSend.append('to', EMAIL_CONFIG.TO_EMAIL);
-    
-    // Add HTML template
-    formDataToSend.append('html', EMAIL_TEMPLATES.quoteRequest(quoteData));
-    
-    const response = await fetch('https://api.web3forms.com/submit', {
+    const emailData = {
+      from: EMAIL_CONFIG.FROM_EMAIL,
+      to: EMAIL_CONFIG.TO_EMAIL,
+      reply_to: quoteData.email,
+      subject: `Quote Request - ${quoteData.projectType} - Code Your Idea`,
+      html: EMAIL_TEMPLATES.quoteRequest(quoteData),
+      text: `New Quote Request\n\nProject Type: ${quoteData.projectType}\nBudget: ${quoteData.budget}\nTimeline: ${quoteData.timeline}\nEmail: ${quoteData.email}\n\nDescription:\n${quoteData.description}`
+    };
+
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      body: formDataToSend
+      headers: {
+        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
     });
 
     const result = await response.json();
-    
-    if (result.success) {
-      return { 
-        success: true, 
-        message: 'Quote request sent successfully! We\'ll prepare your custom quote and send it within 24 hours.' 
+
+    if (response.ok && result.id) {
+      return {
+        success: true,
+        message: 'Quote request sent successfully! We\'ll prepare your custom quote and send it within 24 hours.'
       };
     } else {
-      throw new Error(result.message || 'Web3Forms submission failed');
+      throw new Error(result.message || 'Resend submission failed');
     }
   } catch (error) {
-    console.error('Web3Forms quote sending failed:', error);
-    return { 
-      success: false, 
-      message: 'Failed to send quote request. Please try again later or contact us directly.' 
+    console.error('Resend quote sending failed:', error);
+    return {
+      success: false,
+      message: 'Failed to send quote request. Please try again later or contact us directly.'
     };
   }
 };
 
-// Send welcome email with section links
+// Send welcome email with section links using Resend
 export const sendWelcomeEmail = async (userData) => {
   try {
-    const formDataToSend = new FormData();
-    formDataToSend.append('access_key', EMAIL_CONFIG.WEB3FORMS_ACCESS_KEY);
-    formDataToSend.append('name', 'Welcome Email');
-    formDataToSend.append('email', userData.email);
-    formDataToSend.append('subject', 'Welcome to Code Your Idea!');
-    formDataToSend.append('to', userData.email);
-    
-    // Add HTML template
-    formDataToSend.append('html', EMAIL_TEMPLATES.welcomeEmail(userData));
-    
-    const response = await fetch('https://api.web3forms.com/submit', {
+    const emailData = {
+      from: EMAIL_CONFIG.FROM_EMAIL,
+      to: userData.email,
+      subject: 'Welcome to Code Your Idea!',
+      html: EMAIL_TEMPLATES.welcomeEmail(userData),
+      text: `Welcome to Code Your Idea!\n\nHi ${userData.name},\n\nThank you for contacting Code Your Idea! We're excited to help you bring your digital vision to life.\n\nOur team will review your inquiry and get back to you within 24 hours with a detailed response and next steps.`
+    };
+
+    const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
-      body: formDataToSend
+      headers: {
+        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
     });
 
     const result = await response.json();
-    
-    if (result.success) {
-      return { 
-        success: true, 
-        message: 'Welcome email sent successfully!' 
+
+    if (response.ok && result.id) {
+      return {
+        success: true,
+        message: 'Welcome email sent successfully!'
       };
     } else {
-      throw new Error(result.message || 'Web3Forms submission failed');
+      throw new Error(result.message || 'Resend submission failed');
     }
   } catch (error) {
     console.error('Welcome email sending failed:', error);
-    return { 
-      success: false, 
-      message: 'Failed to send welcome email.' 
+    return {
+      success: false,
+      message: 'Failed to send welcome email.'
+    };
+  }
+};
+
+// Helper function to convert file to base64
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      // Remove data URL prefix (data:application/pdf;base64,)
+      const base64String = reader.result.split(',')[1];
+      resolve(base64String);
+    };
+    reader.onerror = (error) => reject(error);
+  });
+};
+
+// Send Career Application Email using Resend
+export const sendCareerApplication = async (formData) => {
+  try {
+    const emailData = {
+      from: EMAIL_CONFIG.FROM_EMAIL,
+      to: EMAIL_CONFIG.TO_EMAIL,
+      reply_to: formData.email,
+      subject: `Job Application - ${formData.position} - ${formData.name}`,
+      html: EMAIL_TEMPLATES.careerApplication(formData),
+      text: `New Job Application\n\nPosition: ${formData.position}\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\nExperience: ${formData.experience || 'Not provided'}\nLinkedIn: ${formData.linkedin || 'Not provided'}\n\nCover Letter:\n${formData.coverLetter || 'Not provided'}`
+    };
+
+    // Add resume file as attachment if provided
+    if (formData.resume) {
+      try {
+        const base64Content = await fileToBase64(formData.resume);
+        emailData.attachments = [
+          {
+            filename: formData.resume.name,
+            content: base64Content
+          }
+        ];
+      } catch (fileError) {
+        console.error('Error converting file to base64:', fileError);
+        // Continue without attachment if conversion fails
+      }
+    }
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(emailData)
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.id) {
+      return {
+        success: true,
+        message: 'Application submitted successfully! We\'ll review your application and get back to you soon.'
+      };
+    } else {
+      throw new Error(result.message || 'Resend submission failed');
+    }
+  } catch (error) {
+    console.error('Career application email sending failed:', error);
+    return {
+      success: false,
+      message: 'Failed to submit application. Please try again later or contact us directly.'
+    };
+  }
+};
+
+// Test Email Function - For testing Resend integration
+export const testEmailService = async () => {
+  try {
+    if (!EMAIL_CONFIG.RESEND_API_KEY) {
+      return {
+        success: false,
+        message: '❌ API key is not configured. Please set VITE_RESEND_API_KEY environment variable.'
+      };
+    }
+
+    const testEmailData = {
+      from: EMAIL_CONFIG.FROM_EMAIL,
+      to: EMAIL_CONFIG.TO_EMAIL,
+      subject: '🧪 Test Email from Code Your Idea Website',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+          <div style="background: linear-gradient(135deg, #3F51B5 0%, #5C6BC0 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+            <h1 style="margin: 0; font-size: 28px;">✅ Email Service Test</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">Code Your Idea - Resend Integration</p>
+          </div>
+          <div style="background: white; padding: 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <h2 style="color: #333F48; margin-bottom: 20px;">Test Successful! 🎉</h2>
+            <p style="color: #333; line-height: 1.6;">
+              This is a test email to verify that your Resend email service is working correctly.
+            </p>
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-top: 20px;">
+              <p style="color: #2e7d32; margin: 0; font-weight: bold;">✅ Email Configuration:</p>
+              <ul style="color: #333; margin: 10px 0 0 20px;">
+                <li>From: ${EMAIL_CONFIG.FROM_EMAIL}</li>
+                <li>To: ${EMAIL_CONFIG.TO_EMAIL}</li>
+                <li>Service: Resend</li>
+                <li>Status: Active</li>
+              </ul>
+            </div>
+            <p style="color: #6c757d; margin-top: 20px; font-size: 14px;">
+              If you received this email, your email service is configured correctly!
+            </p>
+          </div>
+        </div>
+      `,
+      text: `Test Email from Code Your Idea\n\nThis is a test email to verify that your Resend email service is working correctly.\n\nIf you received this email, your email service is configured correctly!`
+    };
+
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(testEmailData)
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.id) {
+      return {
+        success: true,
+        message: `✅ Test email sent successfully! Email ID: ${result.id}. Check your inbox at ${EMAIL_CONFIG.TO_EMAIL}`,
+        emailId: result.id
+      };
+    } else {
+      throw new Error(result.message || 'Resend test failed');
+    }
+  } catch (error) {
+    console.error('Test email sending failed:', error);
+    return {
+      success: false,
+      message: `❌ Test failed: ${error.message || 'Unknown error'}`
     };
   }
 };

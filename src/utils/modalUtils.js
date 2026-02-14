@@ -1,5 +1,5 @@
 import Swal from 'sweetalert2';
-import { sendContactEmail, sendQuoteEmail, sendEmailViaMailto } from './emailService';
+import { sendContactEmail, sendQuoteEmail, sendCareerApplication, sendEmailViaMailto } from './emailService';
 
 // Custom green theme styles
 const customStyles = {
@@ -289,6 +289,48 @@ export const handleContactSubmission = async (formData) => {
     const fallbackBody = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\nProject: ${formData.project || 'Not specified'}\nMessage: ${formData.message}`;
     setTimeout(() => {
       sendEmailViaMailto(`Contact from ${formData.name}`, fallbackBody);
+    }, 2000);
+
+    return false;
+  }
+};
+
+// Career application submission
+export const handleCareerApplication = async (formData) => {
+  try {
+    const emailResult = await sendCareerApplication(formData);
+
+    if (emailResult.success) {
+      showSuccessModal(
+        'Application Submitted Successfully!',
+        'Thank you for your interest! We\'ll review your application and get back to you soon.'
+      );
+      return true;
+    } else {
+      showErrorModal(
+        'Application Failed to Submit 😞',
+        emailResult.message
+      );
+
+      // Fallback to mailto as backup
+      const fallbackBody = `Job Application - ${formData.position}\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\nExperience: ${formData.experience || 'Not provided'}\nLinkedIn: ${formData.linkedin || 'Not provided'}\n\nCover Letter:\n${formData.coverLetter || 'Not provided'}`;
+      setTimeout(() => {
+        sendEmailViaMailto(`Job Application - ${formData.position} - ${formData.name}`, fallbackBody);
+      }, 2000);
+
+      return false;
+    }
+  } catch (error) {
+    console.error('Career application submission error:', error);
+    showErrorModal(
+      'Application Failed to Submit 😞',
+      'There was a technical issue. Please try contacting us directly via email or phone.'
+    );
+
+    // Fallback to mailto
+    const fallbackBody = `Job Application - ${formData.position}\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\nExperience: ${formData.experience || 'Not provided'}\nLinkedIn: ${formData.linkedin || 'Not provided'}\n\nCover Letter:\n${formData.coverLetter || 'Not provided'}`;
+    setTimeout(() => {
+      sendEmailViaMailto(`Job Application - ${formData.position} - ${formData.name}`, fallbackBody);
     }, 2000);
 
     return false;

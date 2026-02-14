@@ -469,6 +469,7 @@ const ContactFooterSection = ({ id }) => {
                     <FooterLink href="#about">About Us</FooterLink>
                     <FooterLink href="#portfolio">Portfolio</FooterLink>
                     <FooterLink href="#pricing">Pricing</FooterLink>
+                    <FooterLink href="/career">Career</FooterLink>
                 </div>
 
                 {/* Column 4: More */}

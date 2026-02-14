@@ -7,7 +7,7 @@ const navLinks = [
     { label: "Our Work", href: "#portfolio", isHash: true },
     { label: "Pricing", href: "#pricing", isHash: true },
     { label: "Testimonials", href: "#testimonials", isHash: true },
-    { label: "Blog", href: "/blog", isHash: false },
+    { label: "Career", href: "/career", isHash: false },
     { label: "Contact Us", href: "#contact", isHash: true },
 ];
 
@@ -44,8 +44,10 @@ const Navbar = () => {
             // Handle hash links (scroll to section)
             scrollToSection(link.href);
         } else {
-            // Handle route links (navigate to page)
+            // Handle route links (navigate to page and scroll to top)
             navigate(link.href);
+            // Scroll to top when navigating to a new page
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     };
 
