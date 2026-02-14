@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
@@ -15,6 +16,30 @@ import ScrollToTop from '../components/ScrollToTop';
 gsap.registerPlugin(ScrollTrigger);
 
 const HomePage = () => {
+    const location = useLocation();
+
+    // Handle hash navigation when coming from other pages
+    useEffect(() => {
+        if (location.hash) {
+            // Wait for page to render, then scroll to section
+            const scrollToHash = (attempts = 0) => {
+                const id = location.hash.replace('#', '');
+                const element = document.getElementById(id);
+                if (element) {
+                    // Add offset for fixed navbar
+                    const yOffset = -80;
+                    const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                    window.scrollTo({ top: y, behavior: 'smooth' });
+                } else if (attempts < 10) {
+                    // Retry if element not found yet
+                    setTimeout(() => scrollToHash(attempts + 1), 100);
+                }
+            };
+            const timer = setTimeout(() => scrollToHash(), 300);
+            return () => clearTimeout(timer);
+        }
+    }, [location.hash]);
+
     useEffect(() => {
         // Initialize GSAP animations
         const initAnimations = () => {
@@ -84,7 +109,7 @@ const HomePage = () => {
                     <PortfolioSection id="portfolio" />
                     <PricingSection id="pricing" />
                     <TestimonialSection id="testimonials" />
-                    <Footer id="footer" />
+                    <Footer id="contact" />
                 </main>
                 <ScrollToTop />
             </div>

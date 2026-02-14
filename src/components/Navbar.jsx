@@ -12,15 +12,25 @@ const navLinks = [
 ];
 
 const scrollToSection = (href) => {
-    if (href === "#") {
+    if (href === "#" || href === "") {
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
     }
     const id = href.replace("#", "");
-    const el = document.getElementById(id);
-    if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
-    }
+    // Try multiple times in case element isn't loaded yet
+    const attemptScroll = (attempts = 0) => {
+        const el = document.getElementById(id);
+        if (el) {
+            // Add offset for fixed navbar
+            const yOffset = -80;
+            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: "smooth" });
+        } else if (attempts < 5) {
+            // Retry after a short delay
+            setTimeout(() => attemptScroll(attempts + 1), 100);
+        }
+    };
+    attemptScroll();
 };
 
 const Navbar = () => {
@@ -42,7 +52,18 @@ const Navbar = () => {
 
         if (link.isHash) {
             // Handle hash links (scroll to section)
-            scrollToSection(link.href);
+            // If we're not on the home page, navigate to home with hash, then scroll
+            if (location.pathname !== '/') {
+                // Navigate to home page with hash
+                navigate(link.href);
+                // Wait for page to load, then scroll to section
+                setTimeout(() => {
+                    scrollToSection(link.href);
+                }, 300);
+            } else {
+                // We're already on home page, just scroll
+                scrollToSection(link.href);
+            }
         } else {
             // Handle route links (navigate to page and scroll to top)
             navigate(link.href);
@@ -136,17 +157,28 @@ const Navbar = () => {
                 <ul className="flex flex-col gap-6 text-xl font-semibold text-white">
                     {navLinks.map((link) => (
                         <li key={link.label}>
-                            <a
-                                href={link.href}
-                                className="relative text-white hover:text-white transition-colors duration-200 group inline-block"
-                                onClick={e => {
-                                    e.preventDefault();
-                                    handleNavClick(link);
-                                }}
-                            >
-                                {link.label}
-                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-futuristic-blue-400 to-futuristic-cyan-400 transition-all duration-300 group-hover:w-full"></span>
-                            </a>
+                            {link.isHash ? (
+                                <a
+                                    href={link.href}
+                                    className="relative text-white hover:text-white transition-colors duration-200 group inline-block"
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        handleNavClick(link);
+                                    }}
+                                >
+                                    {link.label}
+                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-futuristic-blue-400 to-futuristic-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+                                </a>
+                            ) : (
+                                <Link
+                                    to={link.href}
+                                    className="relative text-white hover:text-white transition-colors duration-200 group inline-block"
+                                    onClick={() => handleNavClick(link)}
+                                >
+                                    {link.label}
+                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-futuristic-blue-400 to-futuristic-cyan-400 transition-all duration-300 group-hover:w-full"></span>
+                                </Link>
+                            )}
                         </li>
                     ))}
                 </ul>
