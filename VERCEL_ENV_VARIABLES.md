@@ -8,21 +8,39 @@ Good news! All API keys have been moved to environment variables. No hardcoded k
 
 Go to your Vercel project → **Settings** → **Environment Variables** and add these:
 
-### 1. Resend API Key (Required)
+### ⚠️ IMPORTANT: Server-Side vs Client-Side Variables
+
+Since we're using serverless functions to avoid CORS issues, the API key is stored **server-side only** (no `VITE_` prefix).
+
+### 1. Resend API Key (Required - Server-Side)
 ```
-Name: VITE_RESEND_API_KEY
+Name: RESEND_API_KEY
 Value: re_dyTJVGYh_5nWsTLnu39nCcvgD64c4RjCH
 Environments: ✅ Production, ✅ Preview, ✅ Development
 ```
+**Note:** This is used by the serverless function (`/api/send-email.js`), so it does NOT need the `VITE_` prefix.
 
-### 2. From Email (Optional - has default)
+### 2. From Email (Optional - Server-Side)
+```
+Name: FROM_EMAIL
+Value: Code Your Idea <noreply@codeyouridea.com>
+Environments: ✅ Production, ✅ Preview, ✅ Development
+```
+
+### 3. To Email (Optional - Server-Side)
+```
+Name: TO_EMAIL
+Value: contact@codeyouridea.com
+Environments: ✅ Production, ✅ Preview, ✅ Development
+```
+
+### 4. Client-Side Email Addresses (Optional - for display)
 ```
 Name: VITE_FROM_EMAIL
 Value: Code Your Idea <noreply@codeyouridea.com>
 Environments: ✅ Production, ✅ Preview, ✅ Development
 ```
 
-### 3. To Email (Optional - has default)
 ```
 Name: VITE_TO_EMAIL
 Value: contact@codeyouridea.com

@@ -12,20 +12,15 @@ const SECTION_LINKS = {
 };
 
 // Email Configuration - Resend
-// IMPORTANT: API keys should be stored in environment variables for security
-// In Vite, use VITE_ prefix for client-side environment variables
+// IMPORTANT: API calls are made through Vercel serverless functions to avoid CORS issues
+// The API key is stored server-side only (in Vercel environment variables)
 const EMAIL_CONFIG = {
-  // Resend Configuration - Uses environment variable (set in Vercel or .env file)
-  RESEND_API_KEY: import.meta.env.VITE_RESEND_API_KEY || '', // Get from https://resend.com/api-keys
-  FROM_EMAIL: import.meta.env.VITE_FROM_EMAIL || 'Code Your Idea <noreply@codeyouridea.com>', // Sender email (must be verified in Resend)
+  // Email addresses (can be overridden by environment variables)
+  FROM_EMAIL: import.meta.env.VITE_FROM_EMAIL || 'Code Your Idea <noreply@codeyouridea.com>',
   TO_EMAIL: import.meta.env.VITE_TO_EMAIL || 'contact@codeyouridea.com',
-  USE_RESEND: true
+  // API endpoint for serverless function
+  API_ENDPOINT: '/api/send-email'
 };
-
-// Validate that API key is set
-if (!EMAIL_CONFIG.RESEND_API_KEY) {
-  console.warn('⚠️ Resend API key is not set. Please set VITE_RESEND_API_KEY in your environment variables.');
-}
 
 // Enhanced Email Templates with Section Links
 const EMAIL_TEMPLATES = {
@@ -238,18 +233,9 @@ const EMAIL_TEMPLATES = {
   `
 };
 
-// Send Contact Form Email using Resend
+// Send Contact Form Email using Resend (via serverless function)
 export const sendContactEmail = async (formData) => {
   try {
-    // Check if API key is configured
-    if (!EMAIL_CONFIG.RESEND_API_KEY) {
-      console.error('Resend API key is not configured');
-      return {
-        success: false,
-        message: 'Email service is not configured. Please contact the administrator.'
-      };
-    }
-
     const emailData = {
       from: EMAIL_CONFIG.FROM_EMAIL,
       to: EMAIL_CONFIG.TO_EMAIL,
@@ -259,28 +245,29 @@ export const sendContactEmail = async (formData) => {
       text: `New Contact Form Submission\n\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || 'Not provided'}\nProject: ${formData.project || 'Not specified'}\n\nMessage:\n${formData.message}`
     };
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch(EMAIL_CONFIG.API_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(emailData)
+      body: JSON.stringify({
+        type: 'contact',
+        emailData
+      })
     });
 
     const result = await response.json();
 
-    if (response.ok && result.id) {
+    if (response.ok && result.success) {
       return {
         success: true,
         message: 'Email sent successfully! We\'ll get back to you within 24 hours.'
       };
     } else {
-      console.error('Resend API error:', result);
-      throw new Error(result.message || result.error?.message || 'Resend submission failed');
+      throw new Error(result.error || 'Failed to send email');
     }
   } catch (error) {
-    console.error('Resend email sending failed:', error);
+    console.error('Email sending failed:', error);
     return {
       success: false,
       message: 'Failed to send message. Please try again later or contact us directly.'
@@ -288,7 +275,7 @@ export const sendContactEmail = async (formData) => {
   }
 };
 
-// Send Quote Request Email using Resend
+// Send Quote Request Email using Resend (via serverless function)
 export const sendQuoteEmail = async (quoteData) => {
   try {
     const emailData = {
@@ -300,27 +287,29 @@ export const sendQuoteEmail = async (quoteData) => {
       text: `New Quote Request\n\nProject Type: ${quoteData.projectType}\nBudget: ${quoteData.budget}\nTimeline: ${quoteData.timeline}\nEmail: ${quoteData.email}\n\nDescription:\n${quoteData.description}`
     };
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch(EMAIL_CONFIG.API_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(emailData)
+      body: JSON.stringify({
+        type: 'quote',
+        emailData
+      })
     });
 
     const result = await response.json();
 
-    if (response.ok && result.id) {
+    if (response.ok && result.success) {
       return {
         success: true,
         message: 'Quote request sent successfully! We\'ll prepare your custom quote and send it within 24 hours.'
       };
     } else {
-      throw new Error(result.message || 'Resend submission failed');
+      throw new Error(result.error || 'Failed to send email');
     }
   } catch (error) {
-    console.error('Resend quote sending failed:', error);
+    console.error('Quote email sending failed:', error);
     return {
       success: false,
       message: 'Failed to send quote request. Please try again later or contact us directly.'
@@ -328,7 +317,7 @@ export const sendQuoteEmail = async (quoteData) => {
   }
 };
 
-// Send welcome email with section links using Resend
+// Send welcome email with section links using Resend (via serverless function)
 export const sendWelcomeEmail = async (userData) => {
   try {
     const emailData = {
@@ -339,24 +328,26 @@ export const sendWelcomeEmail = async (userData) => {
       text: `Welcome to Code Your Idea!\n\nHi ${userData.name},\n\nThank you for contacting Code Your Idea! We're excited to help you bring your digital vision to life.\n\nOur team will review your inquiry and get back to you within 24 hours with a detailed response and next steps.`
     };
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch(EMAIL_CONFIG.API_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(emailData)
+      body: JSON.stringify({
+        type: 'welcome',
+        emailData
+      })
     });
 
     const result = await response.json();
 
-    if (response.ok && result.id) {
+    if (response.ok && result.success) {
       return {
         success: true,
         message: 'Welcome email sent successfully!'
       };
     } else {
-      throw new Error(result.message || 'Resend submission failed');
+      throw new Error(result.error || 'Failed to send email');
     }
   } catch (error) {
     console.error('Welcome email sending failed:', error);
@@ -381,7 +372,7 @@ const fileToBase64 = (file) => {
   });
 };
 
-// Send Career Application Email using Resend
+// Send Career Application Email using Resend (via serverless function)
 export const sendCareerApplication = async (formData) => {
   try {
     const emailData = {
@@ -409,24 +400,26 @@ export const sendCareerApplication = async (formData) => {
       }
     }
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch(EMAIL_CONFIG.API_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(emailData)
+      body: JSON.stringify({
+        type: 'career',
+        emailData
+      })
     });
 
     const result = await response.json();
 
-    if (response.ok && result.id) {
+    if (response.ok && result.success) {
       return {
         success: true,
         message: 'Application submitted successfully! We\'ll review your application and get back to you soon.'
       };
     } else {
-      throw new Error(result.message || 'Resend submission failed');
+      throw new Error(result.error || 'Failed to send email');
     }
   } catch (error) {
     console.error('Career application email sending failed:', error);
@@ -437,16 +430,9 @@ export const sendCareerApplication = async (formData) => {
   }
 };
 
-// Test Email Function - For testing Resend integration
+// Test Email Function - For testing Resend integration (via serverless function)
 export const testEmailService = async () => {
   try {
-    if (!EMAIL_CONFIG.RESEND_API_KEY) {
-      return {
-        success: false,
-        message: '❌ API key is not configured. Please set VITE_RESEND_API_KEY environment variable.'
-      };
-    }
-
     const testEmailData = {
       from: EMAIL_CONFIG.FROM_EMAIL,
       to: EMAIL_CONFIG.TO_EMAIL,
@@ -467,7 +453,7 @@ export const testEmailService = async () => {
               <ul style="color: #333; margin: 10px 0 0 20px;">
                 <li>From: ${EMAIL_CONFIG.FROM_EMAIL}</li>
                 <li>To: ${EMAIL_CONFIG.TO_EMAIL}</li>
-                <li>Service: Resend</li>
+                <li>Service: Resend (via Serverless Function)</li>
                 <li>Status: Active</li>
               </ul>
             </div>
@@ -480,25 +466,27 @@ export const testEmailService = async () => {
       text: `Test Email from Code Your Idea\n\nThis is a test email to verify that your Resend email service is working correctly.\n\nIf you received this email, your email service is configured correctly!`
     };
 
-    const response = await fetch('https://api.resend.com/emails', {
+    const response = await fetch(EMAIL_CONFIG.API_ENDPOINT, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${EMAIL_CONFIG.RESEND_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(testEmailData)
+      body: JSON.stringify({
+        type: 'test',
+        emailData: testEmailData
+      })
     });
 
     const result = await response.json();
 
-    if (response.ok && result.id) {
+    if (response.ok && result.success) {
       return {
         success: true,
         message: `✅ Test email sent successfully! Email ID: ${result.id}. Check your inbox at ${EMAIL_CONFIG.TO_EMAIL}`,
         emailId: result.id
       };
     } else {
-      throw new Error(result.message || 'Resend test failed');
+      throw new Error(result.error || 'Test failed');
     }
   } catch (error) {
     console.error('Test email sending failed:', error);
