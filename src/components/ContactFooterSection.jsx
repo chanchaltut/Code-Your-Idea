@@ -469,6 +469,7 @@ const ContactFooterSection = ({ id }) => {
                     <FooterLink href="#about">About Us</FooterLink>
                     <FooterLink href="#portfolio">Portfolio</FooterLink>
                     <FooterLink href="#pricing">Pricing</FooterLink>
+                    <FooterLink href="/blog">Blog</FooterLink>
                     <FooterLink href="/career">Career</FooterLink>
                 </div>
 
@@ -510,11 +511,21 @@ const FooterLink = ({ children, href, onClick, className = "" }) => {
     // Use Link for internal routes, anchor for external/hash links
     const isInternalRoute = href && href.startsWith('/') && !href.startsWith('#');
 
+    const handleClick = (e) => {
+        // Scroll to top when navigating to a new page
+        if (isInternalRoute) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        if (onClick) {
+            onClick(e);
+        }
+    };
+
     if (isInternalRoute) {
         return (
             <Link
                 to={href}
-                onClick={onClick}
+                onClick={handleClick}
                 className={`text-white/60 hover:text-white transition-colors text-sm font-medium block font-sans ${className}`}
             >
                 {children}
@@ -525,7 +536,7 @@ const FooterLink = ({ children, href, onClick, className = "" }) => {
     return (
         <a
             href={href}
-            onClick={onClick}
+            onClick={handleClick}
             className={`text-white/60 hover:text-white transition-colors text-sm font-medium block font-sans ${className}`}
         >
             {children}
