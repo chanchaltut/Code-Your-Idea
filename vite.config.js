@@ -14,22 +14,41 @@ export default defineConfig({
     // Optimize chunk size
     rollupOptions: {
       output: {
-        // Manual chunk splitting for better caching
-        manualChunks: {
-          // Vendor chunks
-          'react-vendor': ['react', 'react-dom'],
-          'framer-motion': ['framer-motion'],
-          'react-icons': ['react-icons'],
-          'sweetalert': ['sweetalert2'],
-          'emailjs': ['@emailjs/browser'],
+        // Manual chunk splitting for better caching and lazy loading
+        manualChunks: (id) => {
+          // Separate heavy 3D libraries
+          if (id.includes('@splinetool') || id.includes('spline')) {
+            return 'spline';
+          }
+          if (id.includes('three') || id.includes('@react-three')) {
+            return 'three';
+          }
           
-          // Separate utilities
-          'utils': [
-            './src/utils/emailService.js',
-            './src/utils/modalUtils.js',
-            './src/utils/sectionLinks.js',
-            './src/utils/viewportFix.js'
-          ]
+          // Separate GSAP (lazy loaded)
+          if (id.includes('gsap')) {
+            return 'gsap';
+          }
+          
+          // Vendor chunks
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('framer-motion')) {
+              return 'framer-motion';
+            }
+            if (id.includes('react-icons')) {
+              return 'react-icons';
+            }
+            if (id.includes('sweetalert')) {
+              return 'sweetalert';
+            }
+            if (id.includes('@emailjs')) {
+              return 'emailjs';
+            }
+            // Other node_modules
+            return 'vendor';
+          }
         },
         
         // Optimize chunk naming

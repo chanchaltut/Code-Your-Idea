@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* Font loading moved to HTML for better performance with font-display: swap */
+/* @import removed - now loaded via <link> tag in index.html */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

@@ -1,19 +1,27 @@
-import { useEffect } from 'react';
+import { useEffect, lazy, Suspense } from 'react';
 import { useLocation } from 'react-router-dom';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
-import AboutSection from '../components/AboutSection';
-import PortfolioSection from '../components/PortfolioSection';
-import PricingSection from '../components/Pricing';
-import TestimonialSection from '../components/TestimonialSection';
-import TopClientsSection from '../components/TopClientsSection';
-import Footer from '../components/ContactFooterSection';
 import ScrollToTop from '../components/ScrollToTop';
 
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+// Lazy load heavy components
+const AboutSection = lazy(() => import('../components/AboutSection'));
+const PortfolioSection = lazy(() => import('../components/PortfolioSection'));
+const PricingSection = lazy(() => import('../components/Pricing'));
+const TestimonialSection = lazy(() => import('../components/TestimonialSection'));
+const TopClientsSection = lazy(() => import('../components/TopClientsSection'));
+const Footer = lazy(() => import('../components/ContactFooterSection'));
+
+// Lazy load GSAP to reduce initial bundle size
+let gsap, ScrollTrigger;
+const loadGSAP = async () => {
+  const gsapModule = await import('gsap');
+  const scrollTriggerModule = await import('gsap/ScrollTrigger');
+  gsap = gsapModule.gsap;
+  ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+  gsap.registerPlugin(ScrollTrigger);
+  return { gsap, ScrollTrigger };
+};
 
 const HomePage = () => {
     const location = useLocation();
@@ -41,11 +49,15 @@ const HomePage = () => {
     }, [location.hash]);
 
     useEffect(() => {
-        // Initialize GSAP animations
-        const initAnimations = () => {
+        // Defer GSAP animations to improve initial load performance
+        const initAnimations = async () => {
+            // Load GSAP only when needed (after initial render)
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const { gsap: gsapLib, ScrollTrigger: ST } = await loadGSAP();
+            
             // Smooth reveal animations for sections
-            gsap.utils.toArray('section, .section').forEach((section, index) => {
-                gsap.fromTo(section,
+            gsapLib.utils.toArray('section, .section').forEach((section, index) => {
+                gsapLib.fromTo(section,
                     {
                         opacity: 0,
                         y: 50,
@@ -70,7 +82,7 @@ const HomePage = () => {
             // Parallax effect for background elements (only if element exists)
             const parallaxElement = document.querySelector('.parallax-bg');
             if (parallaxElement) {
-                gsap.to('.parallax-bg', {
+                gsapLib.to('.parallax-bg', {
                     yPercent: -50,
                     ease: "none",
                     scrollTrigger: {
@@ -83,12 +95,19 @@ const HomePage = () => {
             }
         };
 
-        // Wait for components to mount
-        const timer = setTimeout(initAnimations, 100);
+        // Initialize animations after a delay to prioritize content rendering
+        const timer = setTimeout(initAnimations, 1000);
 
         return () => {
             clearTimeout(timer);
-            ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            // Cleanup ScrollTrigger if it was loaded
+            if (typeof ScrollTrigger !== 'undefined' && ScrollTrigger && ScrollTrigger.getAll) {
+                try {
+                    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+                } catch (e) {
+                    // Silently fail if ScrollTrigger is not fully initialized
+                }
+            }
         };
     }, []);
 
@@ -105,11 +124,13 @@ const HomePage = () => {
                 <Navbar />
                 <main className="relative">
                     <HeroSection />
-                    <AboutSection id="about" />
-                    <PortfolioSection id="portfolio" />
-                    <PricingSection id="pricing" />
-                    <TestimonialSection id="testimonials" />
-                    <Footer id="contact" />
+                    <Suspense fallback={<div className="min-h-screen bg-black" />}>
+                        <AboutSection id="about" />
+                        <PortfolioSection id="portfolio" />
+                        <PricingSection id="pricing" />
+                        <TestimonialSection id="testimonials" />
+                        <Footer id="contact" />
+                    </Suspense>
                 </main>
                 <ScrollToTop />
             </div>

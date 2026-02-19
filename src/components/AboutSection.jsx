@@ -1,6 +1,8 @@
-import React, { Suspense } from 'react';
-import Spline from '@splinetool/react-spline';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import SplineErrorBoundary from './SplineErrorBoundary';
+
+// Lazy load Spline component to reduce initial bundle size
+const Spline = lazy(() => import('@splinetool/react-spline'));
 
 // Loading fallback component
 const SplineLoadingFallback = () => (
@@ -27,6 +29,44 @@ const SplineErrorFallback = () => (
 );
 
 const AboutSection = ({ id = "about" }) => {
+    // Lazy load Spline only when component is in viewport (for mobile performance)
+    const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        // Detect mobile devices
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+
+        // Intersection Observer to load Spline only when section is visible
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && !shouldLoadSpline) {
+                        // Delay loading on mobile for better performance
+                        setTimeout(() => {
+                            setShouldLoadSpline(true);
+                        }, isMobile ? 1000 : 300);
+                    }
+                });
+            },
+            { rootMargin: '100px' }
+        );
+
+        const section = document.getElementById(id);
+        if (section) {
+            observer.observe(section);
+        }
+
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+            if (section) observer.unobserve(section);
+        };
+    }, [id, shouldLoadSpline, isMobile]);
+
     return (
         <section id={id} className="relative w-full min-h-[50vh] md:min-h-screen bg-black text-white overflow-hidden flex flex-col items-center justify-center py-12 md:py-20">
 
@@ -60,17 +100,20 @@ const AboutSection = ({ id = "about" }) => {
 
                 {/* Center Column: The Spline Robot */}
                 <div className="h-[180px] sm:h-[300px] md:h-[600px] w-full flex items-center justify-center relative overflow-visible nav-max:hidden flex">
-                    <SplineErrorBoundary fallback={<SplineErrorFallback />}>
-                        <Suspense fallback={<SplineLoadingFallback />}>
-
-                            <div className="absolute inset-0 w-full h-full flex items-center justify-center">
-                                <Spline
-                                    className="w-[80%] h-full bg-transparent"
-                                    scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
-                                />
-                            </div>
-                        </Suspense>
-                    </SplineErrorBoundary>
+                    {shouldLoadSpline ? (
+                        <SplineErrorBoundary fallback={<SplineErrorFallback />}>
+                            <Suspense fallback={<SplineLoadingFallback />}>
+                                <div className="absolute inset-0 w-full h-full flex items-center justify-center">
+                                    <Spline
+                                        className="w-[80%] h-full bg-transparent"
+                                        scene="https://prod.spline.design/HQTbnMbGpevLOP8d/scene.splinecode"
+                                    />
+                                </div>
+                            </Suspense>
+                        </SplineErrorBoundary>
+                    ) : (
+                        <SplineLoadingFallback />
+                    )}
 
                     {/* Watermark Cover */}
                     <div className="absolute bottom-2 right-2 md:bottom-4 md:-right-8 w-20 h-6 md:w-48 md:h-12 bg-black z-20 pointer-events-none" />
