@@ -4,7 +4,8 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/png" href="/favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="renderer" content="webkit" />
 
@@ -13,27 +14,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="dns-prefetch" href="https://api.web3forms.com">
   <link rel="dns-prefetch" href="https://static.klaviyo.com">
-  
-  <!-- Optimized font loading with font-display: swap -->
-  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"></noscript>
-  <script>
-    // Fallback for browsers that don't support onload on link tags
-    (function() {
-      var link = document.querySelector('link[href*="fonts.googleapis.com"]');
-      if (link && link.rel === 'preload') {
-        link.onload = function() {
-          this.rel = 'stylesheet';
-        };
-        // Fallback timeout
-        setTimeout(function() {
-          if (link.rel === 'preload') {
-            link.rel = 'stylesheet';
-          }
-        }, 3000);
-      }
-    })();
-  </script>
+
+  <!-- Optimized font loading with font-display: swap - async load -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  </noscript>
 
   <!-- Primary Meta Tags -->
   <title>Best Website & App Development Company in Balangir, India | Code Your Idea</title>
@@ -144,15 +131,39 @@
 
   <!-- Preload critical resources -->
   <link rel="preload" href="/src/index.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="/src/index.css"></noscript>
-  
+  <noscript>
+    <link rel="stylesheet" href="/src/index.css">
+  </noscript>
+
   <!-- Preload logo (used in navbar, critical for above-the-fold) -->
   <link rel="preload" href="/logo-w.png" as="image" fetchpriority="high">
-  
+
   <!-- Critical inline CSS for above-the-fold content -->
   <style>
     /* Critical CSS for initial render */
-    *{box-sizing:border-box}html{height:-webkit-fill-available;scroll-behavior:smooth}body{margin:0;padding:0;min-height:100vh;min-height:-webkit-fill-available;background:transparent;overflow-x:hidden;position:relative;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}:root{--vh:1vh}
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      height: -webkit-fill-available;
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      background: transparent;
+      overflow-x: hidden;
+      position: relative;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif
+    }
+
+    :root {
+      --vh: 1vh
+    }
   </style>
 
   <!-- Note: Hero slider images (img-one.webp, img-two.webp) removed from preload
@@ -162,19 +173,37 @@
 <body>
   <div id="root"></div>
 
-  <!-- Third-party scripts with async loading -->
-  <script async type='text/javascript' src='https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=V9Kshp'></script>
-
-  <!-- Google Analytics (replace with your GA4 ID) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PH6LQ9ML39"></script>
+  <!-- Third-party scripts deferred to after page load -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-PH6LQ9ML39', {
-      page_title: 'Code Your Idea - Web & App Development',
-      page_location: window.location.href,
-      send_page_view: true
+    // Defer Klaviyo and GTM to load after page is interactive
+    window.addEventListener('load', function () {
+      // Load Klaviyo after page load
+      setTimeout(function () {
+        var klaviyoScript = document.createElement('script');
+        klaviyoScript.type = 'text/javascript';
+        klaviyoScript.src = 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=V9Kshp';
+        klaviyoScript.async = true;
+        document.head.appendChild(klaviyoScript);
+      }, 2000);
+
+      // Load Google Analytics after page load
+      setTimeout(function () {
+        var gtagScript = document.createElement('script');
+        gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-PH6LQ9ML39';
+        gtagScript.async = true;
+        document.head.appendChild(gtagScript);
+
+        gtagScript.onload = function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', 'G-PH6LQ9ML39', {
+            page_title: 'Code Your Idea - Web & App Development',
+            page_location: window.location.href,
+            send_page_view: true
+          });
+        };
+      }, 1500);
     });
   </script>
 
@@ -184,8 +213,8 @@
     // Defer service worker registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function () {
-        setTimeout(function() {
-          navigator.serviceWorker.register('/sw.js').catch(function() {
+        setTimeout(function () {
+          navigator.serviceWorker.register('/sw.js').catch(function () {
             // Silently fail if service worker registration fails
           });
         }, 2000);

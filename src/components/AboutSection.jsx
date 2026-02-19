@@ -34,36 +34,60 @@ const AboutSection = ({ id = "about" }) => {
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        // Detect mobile devices
+        // Detect mobile devices - more aggressive detection
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+            const isMobileDevice = window.innerWidth < 768 || 
+                /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+                (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+            setIsMobile(isMobileDevice);
+            // Don't load Spline on mobile at all for better performance
+            if (isMobileDevice) {
+                return;
+            }
         };
         checkMobile();
-        window.addEventListener('resize', checkMobile);
+        
+        // Debounced resize handler to prevent forced reflow
+        let resizeTimeout;
+        const handleResize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                checkMobile();
+            }, 150);
+        };
+        window.addEventListener('resize', handleResize, { passive: true });
 
-        // Intersection Observer to load Spline only when section is visible
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting && !shouldLoadSpline) {
-                        // Delay loading on mobile for better performance
-                        setTimeout(() => {
-                            setShouldLoadSpline(true);
-                        }, isMobile ? 1000 : 300);
-                    }
-                });
-            },
-            { rootMargin: '100px' }
-        );
+        // Intersection Observer to load Spline only when section is visible (desktop only)
+        if (!isMobile) {
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting && !shouldLoadSpline && !isMobile) {
+                            // Delay loading to prioritize critical content
+                            setTimeout(() => {
+                                setShouldLoadSpline(true);
+                            }, 500);
+                        }
+                    });
+                },
+                { rootMargin: '200px' }
+            );
 
-        const section = document.getElementById(id);
-        if (section) {
-            observer.observe(section);
+            const section = document.getElementById(id);
+            if (section) {
+                observer.observe(section);
+            }
+
+            return () => {
+                clearTimeout(resizeTimeout);
+                window.removeEventListener('resize', handleResize);
+                if (section) observer.unobserve(section);
+            };
         }
 
         return () => {
-            window.removeEventListener('resize', checkMobile);
-            if (section) observer.unobserve(section);
+            clearTimeout(resizeTimeout);
+            window.removeEventListener('resize', handleResize);
         };
     }, [id, shouldLoadSpline, isMobile]);
 
@@ -100,7 +124,7 @@ const AboutSection = ({ id = "about" }) => {
 
                 {/* Center Column: The Spline Robot */}
                 <div className="h-[180px] sm:h-[300px] md:h-[600px] w-full flex items-center justify-center relative overflow-visible nav-max:hidden flex">
-                    {shouldLoadSpline ? (
+                    {!isMobile && shouldLoadSpline ? (
                         <SplineErrorBoundary fallback={<SplineErrorFallback />}>
                             <Suspense fallback={<SplineLoadingFallback />}>
                                 <div className="absolute inset-0 w-full h-full flex items-center justify-center">

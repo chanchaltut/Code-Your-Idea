@@ -1,5 +1,4 @@
-import React, { useRef, useEffect } from "react";
-import { gsap } from "gsap";
+import React, { useRef, useEffect, useState } from "react";
 import analytics from "../utils/analytics";
 import { showQuoteModal } from "../utils/modalUtils";
 
@@ -12,28 +11,38 @@ const HeroSection = () => {
     useEffect(() => {
         if (!heroRef.current) return;
 
-        // Hero entrance animation
-        const tl = gsap.timeline();
+        // Lazy load GSAP to avoid blocking initial render - delay to prioritize content
+        const initAnimation = async () => {
+            // Small delay to ensure content renders first
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            const { gsap } = await import('gsap');
+            
+            // Hero entrance animation
+            const tl = gsap.timeline();
 
-        tl.fromTo(heroRef.current,
-            { opacity: 0, scale: 0.95 },
-            { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }
-        )
-            .fromTo(titleRef.current,
-                { opacity: 0, y: 50 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-                "-=0.5"
+            tl.fromTo(heroRef.current,
+                { opacity: 0, scale: 0.95 },
+                { opacity: 1, scale: 1, duration: 1, ease: "power2.out" }
             )
-            .fromTo(subtitleRef.current,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-                "-=0.6"
-            )
-            .fromTo(ctaRef.current,
-                { opacity: 0, y: 30 },
-                { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
-                "-=0.4"
-            );
+                .fromTo(titleRef.current,
+                    { opacity: 0, y: 50 },
+                    { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+                    "-=0.5"
+                )
+                .fromTo(subtitleRef.current,
+                    { opacity: 0, y: 30 },
+                    { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+                    "-=0.6"
+                )
+                .fromTo(ctaRef.current,
+                    { opacity: 0, y: 30 },
+                    { opacity: 1, y: 0, duration: 0.8, ease: "power2.out" },
+                    "-=0.4"
+                );
+        };
+
+        initAnimation();
 
         return () => { };
     }, []);

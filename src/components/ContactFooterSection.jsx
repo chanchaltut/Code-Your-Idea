@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FaLinkedin, FaFacebook, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
-import { SiX } from "react-icons/si";
+import { LinkedInIcon, FacebookIcon, InstagramIcon, YouTubeIcon, TwitterXIcon, WhatsAppIcon } from "./icons/SocialIcons";
 import { handleContactSubmission, showWarningModal } from "../utils/modalUtils";
 import analytics from "../utils/analytics";
 import 'react-phone-input-2/lib/style.css';
@@ -437,11 +436,11 @@ const ContactFooterSection = ({ id }) => {
 
                     {/* Social Icons */}
                     <div className="flex justify-center gap-3 pt-4">
-                        <SocialIcon Icon={FaLinkedin} href="https://www.linkedin.com/company/codeyouridea" track="linkedin" />
-                        <SocialIcon Icon={FaFacebook} href="https://www.facebook.com/codeyourideapage/" track="facebook" />
-                        <SocialIcon Icon={FaInstagram} href="https://www.instagram.com/codeyouridea_" track="instagram" />
-                        <SocialIcon Icon={FaYoutube} href="https://www.youtube.com/@CodeYourIdeaVideos" track="youtube" />
-                        <SocialIcon Icon={SiX} href="https://www.x.com/codeyouridea_" track="x" />
+                        <SocialIcon Icon={LinkedInIcon} href="https://www.linkedin.com/company/codeyouridea" track="linkedin" />
+                        <SocialIcon Icon={FacebookIcon} href="https://www.facebook.com/codeyourideapage/" track="facebook" />
+                        <SocialIcon Icon={InstagramIcon} href="https://www.instagram.com/codeyouridea_" track="instagram" />
+                        <SocialIcon Icon={YouTubeIcon} href="https://www.youtube.com/@CodeYourIdeaVideos" track="youtube" />
+                        <SocialIcon Icon={TwitterXIcon} href="https://www.x.com/codeyouridea_" track="x" />
                     </div>
                 </div>
 
@@ -501,9 +500,10 @@ const SocialIcon = ({ Icon, href, track }) => (
         target="_blank"
         rel="noopener noreferrer"
         onClick={() => analytics && analytics.trackSocialClick(track)}
-        className="w-10 h-10 bg-[#e0e0e0] hover:bg-white rounded-full flex items-center justify-center transition-all duration-300 group"
+        className="w-10 h-10 bg-[#e0e0e0] hover:bg-white rounded-full flex items-center justify-center transition-transform duration-300 group"
+        aria-label={`Follow us on ${track}`}
     >
-        <Icon className="w-5 h-5 text-black/70 group-hover:text-black transition-colors" />
+        <Icon className="w-5 h-5 text-black/70 group-hover:text-black transition-opacity duration-300" />
     </a>
 );
 

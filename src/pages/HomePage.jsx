@@ -49,34 +49,41 @@ const HomePage = () => {
     }, [location.hash]);
 
     useEffect(() => {
-        // Defer GSAP animations to improve initial load performance
+        // Defer GSAP animations using Intersection Observer - only load when sections are visible
+        const sectionRefs = document.querySelectorAll('section, .section');
+        
+        if (sectionRefs.length === 0) return;
+
         const initAnimations = async () => {
-            // Load GSAP only when needed (after initial render)
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Load GSAP only when needed (lazy load)
             const { gsap: gsapLib, ScrollTrigger: ST } = await loadGSAP();
             
-            // Smooth reveal animations for sections
-            gsapLib.utils.toArray('section, .section').forEach((section, index) => {
-                gsapLib.fromTo(section,
-                    {
-                        opacity: 0,
-                        y: 50,
-                        scale: 0.95
+            // Use Intersection Observer to animate sections only when they're about to enter viewport
+            sectionRefs.forEach((section) => {
+                const observer = new IntersectionObserver(
+                    (entries) => {
+                        entries.forEach((entry) => {
+                            if (entry.isIntersecting) {
+                                // Use transform and opacity only (GPU composited) to avoid forced reflow
+                                gsapLib.fromTo(entry.target,
+                                    {
+                                        opacity: 0,
+                                        y: 30
+                                    },
+                                    {
+                                        opacity: 1,
+                                        y: 0,
+                                        duration: 0.8,
+                                        ease: "power2.out"
+                                    }
+                                );
+                                observer.unobserve(entry.target);
+                            }
+                        });
                     },
-                    {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1,
-                        duration: 1,
-                        ease: "power2.out",
-                        scrollTrigger: {
-                            trigger: section,
-                            start: "top 80%",
-                            end: "bottom 20%",
-                            toggleActions: "play none none reverse"
-                        }
-                    }
+                    { rootMargin: '100px', threshold: 0.1 }
                 );
+                observer.observe(section);
             });
 
             // Parallax effect for background elements (only if element exists)
@@ -95,8 +102,8 @@ const HomePage = () => {
             }
         };
 
-        // Initialize animations after a delay to prioritize content rendering
-        const timer = setTimeout(initAnimations, 1000);
+        // Initialize animations after page is interactive (not blocking main thread)
+        const timer = setTimeout(initAnimations, 2000);
 
         return () => {
             clearTimeout(timer);
