@@ -49,44 +49,45 @@ const HomePage = () => {
     }, [location.hash]);
 
     useEffect(() => {
+        const prefersReducedMotion = typeof window !== 'undefined' &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+
         // Defer GSAP animations using Intersection Observer - only load when sections are visible
         const sectionRefs = document.querySelectorAll('section, .section');
-        
         if (sectionRefs.length === 0) return;
 
         const initAnimations = async () => {
-            // Load GSAP only when needed (lazy load)
             const { gsap: gsapLib, ScrollTrigger: ST } = await loadGSAP();
-            
-            // Use Intersection Observer to animate sections only when they're about to enter viewport
-            sectionRefs.forEach((section) => {
+
+            // Animate sections one-by-one as they enter view (reduces lag from many simultaneous animations)
+            sectionRefs.forEach((section, index) => {
                 const observer = new IntersectionObserver(
                     (entries) => {
                         entries.forEach((entry) => {
-                            if (entry.isIntersecting) {
-                                // Use transform and opacity only (GPU composited) to avoid forced reflow
-                                gsapLib.fromTo(entry.target,
-                                    {
-                                        opacity: 0,
-                                        y: 30
-                                    },
-                                    {
-                                        opacity: 1,
-                                        y: 0,
-                                        duration: 0.8,
-                                        ease: "power2.out"
-                                    }
-                                );
-                                observer.unobserve(entry.target);
-                            }
+                            if (!entry.isIntersecting) return;
+                            const el = entry.target;
+                            observer.unobserve(el);
+                            // Stagger start slightly to avoid one big paint
+                            const delay = index * 0.05;
+                            gsapLib.fromTo(el,
+                                { opacity: 0, y: 30 },
+                                {
+                                    opacity: 1,
+                                    y: 0,
+                                    duration: 0.8,
+                                    ease: "power2.out",
+                                    delay,
+                                    overwrite: true
+                                }
+                            );
                         });
                     },
-                    { rootMargin: '100px', threshold: 0.1 }
+                    { rootMargin: '80px', threshold: 0.05 }
                 );
                 observer.observe(section);
             });
 
-            // Parallax effect for background elements (only if element exists)
             const parallaxElement = document.querySelector('.parallax-bg');
             if (parallaxElement) {
                 gsapLib.to('.parallax-bg', {
@@ -102,18 +103,14 @@ const HomePage = () => {
             }
         };
 
-        // Initialize animations after page is interactive (not blocking main thread)
         const timer = setTimeout(initAnimations, 2000);
 
         return () => {
             clearTimeout(timer);
-            // Cleanup ScrollTrigger if it was loaded
-            if (typeof ScrollTrigger !== 'undefined' && ScrollTrigger && ScrollTrigger.getAll) {
+            if (typeof ScrollTrigger !== 'undefined' && ScrollTrigger?.getAll) {
                 try {
                     ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-                } catch (e) {
-                    // Silently fail if ScrollTrigger is not fully initialized
-                }
+                } catch (e) {}
             }
         };
     }, []);

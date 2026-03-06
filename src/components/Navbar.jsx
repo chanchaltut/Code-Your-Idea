@@ -75,7 +75,7 @@ const Navbar = () => {
 
     return (
         <nav
-            className={`fixed top-0 left-0 w-full flex items-center justify-between transition-all duration-300 z-50 px-4 nav:px-8
+            className={`fixed top-0 left-0 w-full flex items-center justify-between transition-all duration-300 z-[9991] px-4 nav:px-8
                 ${scrolled
                     ? "backdrop-blur-md bg-black/40 border-b border-white/10 py-2 nav:py-3"
                     : "bg-transparent py-4 nav:py-6"}
@@ -130,7 +130,7 @@ const Navbar = () => {
             </div>
             {/* Hamburger Icon */}
             <button
-                className="nav:hidden flex flex-col justify-center items-center w-10 h-10 group relative z-50"
+                className="nav:hidden flex flex-col justify-center items-center w-10 h-10 group relative z-[9992]"
                 aria-label="Open menu"
                 onClick={() => setSidebarOpen((open) => !open)}
             >
@@ -144,15 +144,15 @@ const Navbar = () => {
                     className={`block h-0.5 w-7 bg-white rounded transition-all duration-300 ${sidebarOpen ? "-rotate-45 -translate-y-2" : ""}`}
                 ></span>
             </button>
-            {/* Sidebar Overlay */}
+            {/* Sidebar Overlay - high z so it always sits above page content on mobile */}
             <div
-                className={`fixed inset-0 bg-black/40 transition-opacity duration-300 z-40 ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+                className={`fixed inset-0 bg-black/40 transition-opacity duration-300 z-[9990] ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
                 onClick={() => setSidebarOpen(false)}
                 aria-hidden="true"
             ></div>
-            {/* Sidebar */}
+            {/* Sidebar - high z so it always overlaps content on mobile */}
             <aside
-                className={`fixed top-0 left-0 h-full w-72 backdrop-blur-xl bg-black/60 border-r border-white/10 shadow-2xl z-50 transform transition-transform duration-300 flex flex-col pt-16 px-8 gap-8 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
+                className={`fixed top-0 left-0 h-full w-72 backdrop-blur-xl bg-black/60 border-r border-white/10 shadow-2xl z-[9991] transform transition-transform duration-300 flex flex-col pt-16 px-8 gap-8 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
                 aria-label="Sidebar menu"
             >
                 <ul className="flex flex-col gap-6 text-xl font-semibold text-white">

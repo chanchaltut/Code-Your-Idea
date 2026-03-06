@@ -116,6 +116,23 @@ npm run preview
 4. **Fix accessibility** - Reach 100 score
 5. **Test on real mobile device** - Verify improvements
 
+## ✅ Latest Fixes (UX / Feedback)
+
+### 8. Mobile sidebar stacking (z-index)
+- **Fixed**: Sidebar and overlay now use high z-index (`z-[9990]` overlay, `z-[9991]` sidebar/nav) so they always sit above page content on mobile. Content no longer overlaps the sidebar in any section.
+- **Files Updated**: `src/components/Navbar.jsx`
+
+### 9. Hero section animation running twice
+- **Fixed**: Animation runs only once on first load. A ref guard prevents the double run caused by React Strict Mode in development.
+- **Files Updated**: `src/components/HeroSection.jsx`
+
+### 10. Desktop lag and animation behavior
+- **Fixed**: Respects `prefers-reduced-motion` (animations skipped when user prefers reduced motion). Section scroll animations use a small stagger delay and `overwrite: true` to avoid conflicting tweens and reduce paint storms. Slightly reduced rootMargin/threshold for Intersection Observer.
+- **Note**: Three.js (`ThreeBackground`) is not used on the live site; lag was likely from GSAP + many sections animating. Spline in AboutSection is already disabled on mobile.
+- **Files Updated**: `src/pages/HomePage.jsx`
+
+---
+
 ## 📝 Notes
 
 - All lazy loading is now properly implemented

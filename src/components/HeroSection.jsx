@@ -7,18 +7,20 @@ const HeroSection = () => {
     const titleRef = useRef(null);
     const subtitleRef = useRef(null);
     const ctaRef = useRef(null);
+    const hasAnimatedRef = useRef(false);
 
     useEffect(() => {
-        if (!heroRef.current) return;
+        if (!heroRef.current || hasAnimatedRef.current) return;
+        hasAnimatedRef.current = true; // Claim immediately so React Strict Mode double-mount doesn't run animation twice
 
         // Lazy load GSAP to avoid blocking initial render - delay to prioritize content
         const initAnimation = async () => {
             // Small delay to ensure content renders first
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             const { gsap } = await import('gsap');
-            
-            // Hero entrance animation
+
+            // Hero entrance animation (runs once even in React Strict Mode)
             const tl = gsap.timeline();
 
             tl.fromTo(heroRef.current,
