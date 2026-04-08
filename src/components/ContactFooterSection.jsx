@@ -449,16 +449,16 @@ const ContactFooterSection = ({ id }) => {
                     <h4 className="text-white font-bold mb-2 text-sm">Contact</h4>
                     <div className="text-white/60 text-sm font-sans font-semibold">
                         <a href="mailto:contact@codeyouridea.com" onClick={() => analytics.trackContactClick('email')} className="text-white/60 hover:text-white transition-colors">
-                            Email Address
+                            contact@codeyouridea.com
                         </a>
                     </div>
                     <div className="text-white/60 text-sm font-sans font-semibold">
                         <a href="tel:+919938965598" onClick={() => analytics.trackContactClick('phone')} className="text-white/60 hover:text-white transition-colors">
-                            Phone Number
+                            +91 9938965598
                         </a>
                     </div>
                     <a href="https://wa.me/919938965598" onClick={() => analytics.trackContactClick('whatsapp')} className="text-white/60 hover:text-white transition-colors text-sm font-sans font-semibold">
-                        WhatsApp
+                        WhatsApp: +91 9938965598
                     </a>
                 </div>
 
