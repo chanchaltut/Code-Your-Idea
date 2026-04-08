@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
-import { LinkedInIcon, FacebookIcon, InstagramIcon, YouTubeIcon, TwitterXIcon, WhatsAppIcon } from "./icons/SocialIcons";
+import { LinkedInIcon, FacebookIcon, InstagramIcon, YouTubeIcon, TwitterXIcon } from "./icons/SocialIcons";
 import { handleContactSubmission, showWarningModal } from "../utils/modalUtils";
 import analytics from "../utils/analytics";
 import 'react-phone-input-2/lib/style.css';
