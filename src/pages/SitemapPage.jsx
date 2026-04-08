@@ -110,7 +110,7 @@ const SitemapPage = () => {
                                 </li>
                                 <li className="flex items-start">
                                     <span className="text-white mr-4 mt-1">•</span>
-                                    <span>International: +91-637-051-0539 (WhatsApp available)</span>
+                                    <span>International: +91-993-896-5598 (WhatsApp available)</span>
                                 </li>
                             </ul>
                         </section>

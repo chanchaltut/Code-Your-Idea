@@ -453,11 +453,11 @@ const ContactFooterSection = ({ id }) => {
                         </a>
                     </div>
                     <div className="text-white/60 text-sm font-sans font-semibold">
-                        <a href="tel:+916370510539" onClick={() => analytics.trackContactClick('phone')} className="text-white/60 hover:text-white transition-colors">
+                        <a href="tel:+919938965598" onClick={() => analytics.trackContactClick('phone')} className="text-white/60 hover:text-white transition-colors">
                             Phone Number
                         </a>
                     </div>
-                    <a href="https://wa.me/916370510539" onClick={() => analytics.trackContactClick('whatsapp')} className="text-white/60 hover:text-white transition-colors text-sm font-sans font-semibold">
+                    <a href="https://wa.me/919938965598" onClick={() => analytics.trackContactClick('whatsapp')} className="text-white/60 hover:text-white transition-colors text-sm font-sans font-semibold">
                         WhatsApp
                     </a>
                 </div>

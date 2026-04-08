@@ -120,7 +120,7 @@ const Navbar = () => {
             {/* CTA Buttons */}
             <div className="hidden nav:flex items-center gap-4">
                 <a
-                    href="https://wa.me/916370510539"
+                    href="https://wa.me/919938965598"
                     target="_blank"
                     rel="noreferrer"
                     className="discuss-btn px-6 sm:px-7 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white"
@@ -184,7 +184,7 @@ const Navbar = () => {
                     ))}
                 </ul>
                 <a
-                    href="https://wa.me/916370510539"
+                    href="https://wa.me/919938965598"
                     target="_blank"
                     rel="noreferrer"
                     className="mt-auto mb-10 px-6 py-3 rounded-full border border-white text-white font-semibold transition-all duration-200 ease-in-out hover:bg-white/10 hover:backdrop-blur-sm hover:text-white focus:text-white active:text-white text-center"
